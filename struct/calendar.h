@@ -1,0 +1,24 @@
+#ifndef CALENDAR_H 
+#define CALENDAR_H
+
+#include "../datatype/date-type.h"
+#include "../datatype/int-type.h"   
+#include "../datatype/string-type.h"
+
+#include "../common/status.h"
+#include "../common/log.h"
+
+typedef struct Calendar {
+    Date date; // date
+    Task* tasks; // list of tasks
+} Calendar;
+
+typedef struct Task {
+    string title; // task title
+    string location; // task location
+    DateTime setBegin;
+    DateTime setEnd; // task set date and time
+    DateTime dueDate; // task due date
+} Task;
+
+#endif // CALENDAR_H

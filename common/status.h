@@ -6,6 +6,8 @@
 
 // typedef int8 code; // 0-failed, 1-success, -1-warning
 
+typedef string error;
+
 typedef struct Status {
     code code; // 0-failed, 1-success, -1-warning
     string msg; // message
@@ -15,6 +17,6 @@ typedef struct Status {
 void FreeStatus(Status* status); // free status
 
 Status* createStatus(const uint8 code, const string msg, const string details); // create status
-code initStatus(Status* status); // initialize status
+Status* initStatus(); // initialize status
 
 #endif // STATUS_H
