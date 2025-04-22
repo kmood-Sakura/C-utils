@@ -14,4 +14,6 @@ typedef struct Notification {
     DateTime dueDate; // notification date and time
 } Notification;
 
+Notification* createNotification(const string header, const string title, DateTime dueDate);
+
 #endif // NOTIFICATION_H

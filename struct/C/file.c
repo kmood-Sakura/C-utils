@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 
 File* initFile() {
     File* file = (File*)malloc(sizeof(File));
@@ -10,9 +11,6 @@ File* initFile() {
         Error("Memory allocation failed for File");
         return NULL; // Memory allocation failed
     }
-    file->filename = NULL;
-    file->dirPath = *initPath(); // Initialize dirPath
-    file->fileType = NULL;
     
     return file; // Success
 }
@@ -28,23 +26,21 @@ File* createFile(const string filename, const string dir, const string fileType)
         return NULL; // Memory allocation failed
     }
     
-    newFile->filename = createString(filename);
-    if (newFile->filename == NULL) {
-        Error("Failed to copy filename string");
+    newFile->filename = createPath(filename);
+    if (newFile->filename.path == NULL) {
+        Error("Failed to copy filename path string");
         FreeFile(newFile);
         return NULL; // Memory allocation failed
     }
-    
-    newFile->dirPath = *createPath(dir); // Copy dirPath
+    newFile->dirPath = createPath(dir); // Copy dirPath
     if (newFile->dirPath.path == NULL) {
         Error("Failed to copy directory path string");
         FreeFile(newFile);
         return NULL; // Memory allocation failed
     }
-    
-    newFile->fileType = createString(fileType);
-    if (newFile->fileType == NULL) {
-        Error("Failed to copy file type string");
+    newFile->fileType = createPath(fileType);
+    if (newFile->fileType.path == NULL) {
+        Error("Failed to copy file type path");
         FreeFile(newFile);
         return NULL; // Memory allocation failed
     }
@@ -52,8 +48,8 @@ File* createFile(const string filename, const string dir, const string fileType)
     return newFile; // Success
 }
 
-File* createFilePath(const string filename, const Path* dirPath, const string fileType) {
-    if (filename == NULL || dirPath == NULL || fileType == NULL) {
+File* createFileWithPath(const Path filename, const Path dirPath, const Path fileType) {
+    if (filename.path == NULL || dirPath.path == NULL || fileType.path == NULL) {
         Warning("Filename, directory path, and file type are required");
         return NULL; // Invalid parameters
     }
@@ -63,104 +59,92 @@ File* createFilePath(const string filename, const Path* dirPath, const string fi
         return NULL; // Memory allocation failed
     }
     
-    newFile->filename = createString(filename);
-    if (newFile->filename == NULL) {
-        Error("Failed to copy filename string");
-        FreeFile(newFile);
-        return NULL; // Memory allocation failed
-    }
-    
-    newFile->dirPath = *createPath(dirPath); // Copy dirPath
-    if (newFile->dirPath.path == NULL) {
-        Error("Failed to copy directory path string");
-        FreeFile(newFile);
-        return NULL; // Memory allocation failed
-    }
-    
-    newFile->fileType = createString(fileType);
-    if (newFile->fileType == NULL) {
-        Error("Failed to copy file type string");
-        FreeFile(newFile);
-        return NULL; // Memory allocation failed
-    }
-    
+    newFile->filename = filename;
+    newFile->dirPath = dirPath; // Copy dirPath
+    newFile->fileType = fileType;
+
     return newFile; // Success
 }
 
-Status* makeFile(const File* file) {
+code MakeFile(const File* file) {
     if (file == NULL) {
-        Warning("File is required");
-        return createStatus(-1, "File is required", NULL); // Invalid file
+        Error("file required");
+        return 0;
     }
-    Path* filePath = createFilePath(file->filename, &file->dirPath, file->fileType);
+    string filepath = createFilePath(file->filename, file->dirPath, file->fileType).path;
+    return MakeFilePath(filepath);
+}
+
+code MakeFolder(const Folder* folder) {
+    if (folder == NULL) {
+        Error("folder required");
+        return 0;
+    }
+    string folderPath = createDirPath(folder->folderName, folder->dirPath).path;
+    return MakeFOlderPath(folderPath);
+}
+
+code MakeFilePath(const string filepath) {
+    if (FileExist(filepath)) {
+        Warning("File have already Exist");
+        return -1;
+    }
+    FILE* file = fopen(filepath, "w");
+    if (file == NULL) {
+        Error("Failed to create file");
+        return 0; // File creation failed
+    }
+
+    fclose(file);
+    return 1; // File created successfully
+}
+
+code MakeFolderPath(const string folderPath) {
+    if (folderPath == NULL) {
+        Error("folderPath is NULL");
+        return 0; // Invalid folder path
+    }
+
+    if (mkdir(folderPath) == -1) {
+        Error("Failed to create folder");
+        return 0; // Folder creation failed
+    }
+
+    return 1; // Folder created successfully
+}
+
+code FileExist(const string filePath) {
     if (filePath == NULL) {
-        Warning("Failed to create file path");
-        return createStatus(0, "Failed to create file path", NULL); // Failed to create file path
+        Error("filepath is NULL");
+        return 0; // Invalid file path
     }
-    if(FilePathExist(filePath) == 1) {
-        return createStatus(0, "File have already exist", NULL); // File does not exist
-    }
-    FILE* file = fopen(filePath->path, "w"); // Open file in write mode
+
+    FILE* file = fopen(filePath, "r");
     if (file == NULL) {
-        FreePath(filePath); // Free file path
-        return createStatus(0, "Failed to create file", NULL); // Failed to create file
+        return 0;
     }
-    fclose(filePath->path); // Close file
-    FreePath(filePath); // Free file path
-
-    return createStatus(1, "File created successfully", NULL); // Success
+    return 1;
 }
 
-Status* FilePathExist(const Path* filePath) {
-    if (filePath == NULL || filePath->path == NULL) {
-        Warning("File path is required");
-        return createStatus(-1, "File path is required", NULL); // Invalid file path
+code FolderExist(const string folderPath) {
+    if (folderPath == NULL) {
+        Error("folderPath is NULL");
+        return 0; // Invalid folder path
     }
-    
-    FILE* file = fopen(filePath->path, "r"); // Open file in read mode
-    if (file != NULL) {
-        fclose(file); // Close file if it exists
-        return createStatus(1, "File exists", NULL); // File exists
-    }
-    
-    return createStatus(0, "File does not exist", NULL); // File does not exist
-}
 
-Status* FileExist(const File* file) {
-    if (file == NULL) {
-        Warning("File is required");
-        return createStatus(-1, "File is required", NULL); // Invalid file
+    DIR* dir = opendir(folderPath);
+    if (dir == NULL) {
+        return 0; // Folder does not exist
     }
-    
-    Path* filePath = createFilePath(file->filename, &file->dirPath, file->fileType);
-    if (filePath == NULL) {
-        Warning("Failed to create file path");
-        return createStatus(0, "Failed to create file path", NULL); // Failed to create file path
-    }
-    
-    FILE* f = fopen(filePath->path, "r"); // Open file in read mode
-    if (f != NULL) {
-        fclose(f); // Close file if it exists
-        FreePath(filePath); // Free file path
-        return createStatus(1, "File exists", NULL); // File exists
-    }
-    
-    FreePath(filePath); // Free file path
-    return createStatus(0, "File does not exist", NULL); // File does not exist
-}
 
+    closedir(dir);
+    return 1; // Folder exists
+}
 
 void FreeFile(File* file) {
     if (file != NULL) {
-        if (file->filename != NULL) {
-            free(file->filename);
-        }
-        if (file->dirPath.path != NULL) {
-            free(file->dirPath.path);
-        }
-        if (file->fileType != NULL) {
-            free(file->fileType);
-        }
-        free(file);
+        FreePath(&file->filename);
+        FreePath(&file->dirPath);
+        FreePath(&file->fileType);
     }
 }

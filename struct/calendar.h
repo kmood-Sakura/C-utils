@@ -18,7 +18,7 @@ typedef struct Task {
     string location; // task location
     DateTime setBegin;
     DateTime setEnd; // task set date and time
-    DateTime dueDate; // task due date
+    DateTime dueDate; // task due date (optional to extend setEnd)
 } Task;
 
 #endif // CALENDAR_H

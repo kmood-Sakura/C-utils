@@ -10,14 +10,32 @@
 #include "path.h"
 
 typedef struct File {
-    string filename; // file name
+    Path filename; // file name
     Path dirPath; // file path
-    string fileType; // file type
+    Path fileType; // file type
 } File;
 
 typedef struct Folder {
-    string folderName; // folder name
+    Path folderName; // folder name
     Path dirPath; // folder path
 } Folder;
+
+#include "../file.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+File* initFile();
+File* createFile(const string filename, const string dir, const string fileType);
+File* createFileDirPath(const string filename, const Path dirPath, const string fileType);
+code MakeFile(const File* file);
+code MakeFolder(const Folder* folder);
+code MakeFilePath(const string filepath);
+code MakeFolderPath(const string folderPath);
+code FileExist(const string filePath);
+code FolderExist(const string folderPath);
+void FreeFile(File* file);
 
 #endif // FILE_H
