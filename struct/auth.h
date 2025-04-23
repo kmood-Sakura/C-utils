@@ -36,4 +36,7 @@ Auth initAuth(); // initialize auth
 code getAuth(Auth* auth); // get auth from user
 code verifyAuth(const Auth* auth); // verify auth
 
+void FreeAuth(Auth* auth); // free auth
+void FreeUserData(UserData* userData); // free user data
+
 #endif // AUTH_H

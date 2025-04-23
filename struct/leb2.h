@@ -111,19 +111,19 @@ Class* createClass(Dashboard* dashboard, Syllabus* syllabus, AssignmentActivity*
 Semester* createSemester(const Class* classdata);
 LEB2* createLEB2(const Semester* semesters);
 
-// Forward declarations
-void freeDashboard(Dashboard* dashboard);
-void freeSyllabus(Syllabus* syllabus);
-void freeAssignment(Assignment* assignment);
-void freeAssignmentActivity(AssignmentActivity* activity, int freeAssignments);
-void freeLearningActivity(LearningActivity* activity);
-void freeAttendance(Attendance* attendance);
-void freeScoreBook(ScoreBook* scoreBook);
-void freeLearnIt(LearnIt* learnIt);
-void freeSurvey(Survey* survey);
-void freeMembers(Members* members);
-void freeClass(Class* class, int freeComponents);
-void freeSemester(Semester* semester, int freeClasses);
-void freeLEB2(LEB2* leb2, int freeSemesters);
+// Function declarations for freeing allocated structures
+void FreeDashboard(Dashboard* dashboard);
+void FreeSyllabus(Syllabus* syllabus);
+void FreeAssignment(Assignment* assignment);
+void FreeAssignmentActivity(AssignmentActivity* activity);
+void FreeLearningActivity(LearningActivity* activity);
+void FreeAttendance(Attendance* attendance);
+void FreeScoreBook(ScoreBook* scoreBook);
+void FreeLearnIt(LearnIt* learnIt);
+void FreeSurvey(Survey* survey);
+void FreeMembers(Members* members);
+void FreeClass(Class* class);
+void FreeSemester(Semester* semester);
+void FreeLEB2(LEB2* leb2);
 
 #endif // LEB2_H

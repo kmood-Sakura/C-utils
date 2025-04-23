@@ -208,7 +208,7 @@ LEB2* createLEB2(const Semester* semesterdata) {
 }
 
 // Function to free Dashboard structure
-void freeDashboard(Dashboard* dashboard) {
+void FreeDashboard(Dashboard* dashboard) {
     if (dashboard == NULL) return;
     
     if (dashboard->description) free(dashboard->description);
@@ -216,7 +216,7 @@ void freeDashboard(Dashboard* dashboard) {
 }
 
 // Function to free Syllabus structure
-void freeSyllabus(Syllabus* syllabus) {
+void FreeSyllabus(Syllabus* syllabus) {
     if (syllabus == NULL) return;
     
     if (syllabus->description) free(syllabus->description);
@@ -224,28 +224,23 @@ void freeSyllabus(Syllabus* syllabus) {
 }
 
 // Function to free Assignment structure
-void freeAssignment(Assignment* assignment) {
+void FreeAssignment(Assignment* assignment) {
     if (assignment == NULL) return;
     
     if (assignment->head) free(assignment->head);
     if (assignment->description) free(assignment->description);
-    // Note: We assume DateTime doesn't need special freeing
     free(assignment);
 }
 
-// Function to free AssignmentActivity structure
-// If freeAssignments is non-zero, it will also free the assignments
-void freeAssignmentActivity(AssignmentActivity* activity, int freeAssignments) {
+// Function to Free AssignmentActivity structure
+void FreeAssignmentActivity(AssignmentActivity* activity) {
     if (activity == NULL) return;
     
-    if (freeAssignments && activity->assignments) {
-        // Assuming assignments is an array, we need to know its size
-        // This is a limitation of this approach - you might need to track the count elsewhere
-        // For simplicity, assuming assignments is NULL-terminated
+    if (activity->assignments) {
         Assignment* current = activity->assignments;
         while (current && current->head) {
             Assignment* next = current + 1;
-            freeAssignment(current);
+            FreeAssignment(current);
             current = next;
         }
     }
@@ -253,8 +248,8 @@ void freeAssignmentActivity(AssignmentActivity* activity, int freeAssignments) {
     free(activity);
 }
 
-// Function to free LearningActivity structure
-void freeLearningActivity(LearningActivity* activity) {
+// Function to Free LearningActivity structure
+void FreeLearningActivity(LearningActivity* activity) {
     if (activity == NULL) return;
     
     if (activity->name) free(activity->name);
@@ -263,8 +258,8 @@ void freeLearningActivity(LearningActivity* activity) {
     free(activity);
 }
 
-// Function to free Attendance structure
-void freeAttendance(Attendance* attendance) {
+// Function to Free Attendance structure
+void FreeAttendance(Attendance* attendance) {
     if (attendance == NULL) return;
     
     if (attendance->name) free(attendance->name);
@@ -273,8 +268,8 @@ void freeAttendance(Attendance* attendance) {
     free(attendance);
 }
 
-// Function to free ScoreBook structure
-void freeScoreBook(ScoreBook* scoreBook) {
+// Function to Free ScoreBook structure
+void FreeScoreBook(ScoreBook* scoreBook) {
     if (scoreBook == NULL) return;
     
     if (scoreBook->name) free(scoreBook->name);
@@ -283,8 +278,8 @@ void freeScoreBook(ScoreBook* scoreBook) {
     free(scoreBook);
 }
 
-// Function to free LearnIt structure
-void freeLearnIt(LearnIt* learnIt) {
+// Function to Free LearnIt structure
+void FreeLearnIt(LearnIt* learnIt) {
     if (learnIt == NULL) return;
     
     if (learnIt->name) free(learnIt->name);
@@ -293,8 +288,8 @@ void freeLearnIt(LearnIt* learnIt) {
     free(learnIt);
 }
 
-// Function to free Survey structure
-void freeSurvey(Survey* survey) {
+// Function to Free Survey structure
+void FreeSurvey(Survey* survey) {
     if (survey == NULL) return;
     
     if (survey->name) free(survey->name);
@@ -303,8 +298,8 @@ void freeSurvey(Survey* survey) {
     free(survey);
 }
 
-// Function to free Members structure
-void freeMembers(Members* members) {
+// Function to Free Members structure
+void FreeMembers(Members* members) {
     if (members == NULL) return;
     
     if (members->name) free(members->name);
@@ -313,40 +308,33 @@ void freeMembers(Members* members) {
     free(members);
 }
 
-// Function to free Class structure
-// If freeComponents is non-zero, it will also free all component structures
-void freeClass(Class* class, int freeComponents) {
+// Function to Free Class structure
+void FreeClass(Class* class) {
     if (class == NULL) return;
     
-    if (freeComponents) {
-        freeDashboard(class->dashboard);
-        freeSyllabus(class->syllabus);
-        freeAssignmentActivity(class->assignmentActivity, 1);
-        freeLearningActivity(class->learningActivity);
-        freeAttendance(class->attendance);
-        freeScoreBook(class->scoreBook);
-        freeLearnIt(class->learnIt);
-        freeSurvey(class->survey);
-        FreeFile(class->files);
-        freeMembers(class->members);
-    }
+    FreeDashboard(class->dashboard);
+    FreeSyllabus(class->syllabus);
+    FreeAssignmentActivity(class->assignmentActivity);
+    FreeLearningActivity(class->learningActivity);
+    FreeAttendance(class->attendance);
+    FreeScoreBook(class->scoreBook);
+    FreeLearnIt(class->learnIt);
+    FreeSurvey(class->survey);
+    FreeFile(class->files);
+    FreeMembers(class->members);
     
     free(class);
 }
 
-// Function to free Semester structure
-// If freeClasses is non-zero, it will also free the classes
-void freeSemester(Semester* semester, int freeClasses) {
+// Function to Free Semester structure
+void FreeSemester(Semester* semester) {
     if (semester == NULL) return;
     
-    if (freeClasses && semester->classes) {
-        // Assuming classes is an array, we need to know its size
-        // This is a limitation - you might need to track the count elsewhere
-        // For simplicity, assuming classes is NULL-terminated
+    if (semester->classes) {
         Class* current = semester->classes;
         while (current) {
             Class* next = current + 1;
-            freeClass(current, 1);
+            FreeClass(current);
             current = next;
         }
     }
@@ -354,21 +342,17 @@ void freeSemester(Semester* semester, int freeClasses) {
     free(semester);
 }
 
-// Function to free LEB2 structure
-// If freeSemesters is non-zero, it will also free the semesters
-void freeLEB2(LEB2* leb2, int freeSemesters) {
+// Function to Free LEB2 structure
+void FreeLEB2(LEB2* leb2) {
     if (leb2 == NULL) return;
     
-    if (freeSemesters && leb2->semesters) {
-        // Assuming semesters is an array, we need to know its size
-        // For simplicity, assuming semesters is NULL-terminated
+    if (leb2->semesters) {
         Semester* current = leb2->semesters;
         while (current) {
             Semester* next = current + 1;
-            freeSemester(current, 1);
+            FreeSemester(current);
             current = next;
         }
     }
-    
     free(leb2);
 }

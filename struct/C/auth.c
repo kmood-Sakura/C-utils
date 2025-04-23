@@ -16,13 +16,12 @@ code getAuth(Auth* auth) {
     if (verifyAuth(auth)) {
         return -1;
     }
-    string input;
-    input = requestString(MAX_STUDENT_ID, "studentId");
-    if(input == NULL) {
+    auth->studentId = requestString(MAX_STUDENT_ID, "studentId");
+    if(auth->studentId == NULL) {
         return 0;
     }
-    input = requestString(MAX_PASSWORD_LEN, "password");
-    if(input == NULL) {
+    auth->password = requestString(MAX_PASSWORD_LEN, "password");
+    if(auth->password == NULL) {
         auth->studentId = NULL;
         return 0;
     }
@@ -37,4 +36,34 @@ code verifyAuth(const Auth* auth) {
         return 0; // Invalid student ID or password
     }
     return 1; // Success
+}
+
+void FreeAuth(Auth* auth) {
+    if (auth == NULL) {
+        return; // Invalid auth
+    }
+    if (auth->studentId != NULL) {
+        freeString(auth->studentId); // Free student ID
+    }
+    if (auth->password != NULL) {
+        freeString(auth->password); // Free password
+    }
+    if (auth->userData != NULL) {
+        FreeUserData(auth->userData); // Free user data
+    }
+}
+
+void FreeUserData(UserData* userData) {
+    if (userData == NULL) {
+        return; // Invalid user data
+    }
+    if (userData->notifications != NULL) {
+        FreeNotification(userData->notifications); // Free notifications
+    }
+    if (userData->calendars != NULL) {
+        FreeCalendar(userData->calendars); // Free calendars
+    }
+    if (userData->leb2 != NULL) {
+        FreeLEB2(userData->leb2); // Free LEB2 data
+    }
 }
