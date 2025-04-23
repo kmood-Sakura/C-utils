@@ -32,7 +32,9 @@ typedef struct Auth {
     UserData* userData; // user data
 } Auth;
 
-Auth initAuth(); // initialize auth
+void initAuth(Auth* auth); // initialize auth
+void ResetAuth(Auth* auth); // reset auth
+
 code getAuth(Auth* auth); // get auth from user
 code verifyAuth(const Auth* auth); // verify auth
 

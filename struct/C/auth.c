@@ -4,12 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-Auth initAuth() {
-    Auth auth;
-    auth.studentId = NULL;
-    auth.password = NULL;
-    auth.userData = NULL;
-    return auth; // Initialize auth structure
+void initAuth(Auth* auth) {
+    auth->studentId = NULL; // Initialize student ID
+    auth->password = NULL; // Initialize password
+    auth->userData = NULL; // Initialize user data
 }
 
 code getAuth(Auth* auth) {
@@ -51,6 +49,25 @@ void FreeAuth(Auth* auth) {
     if (auth->userData != NULL) {
         FreeUserData(auth->userData); // Free user data
     }
+    free(auth); // Free auth structure
+}
+
+void ResetAuth(Auth* auth) {
+    if (auth == NULL) {
+        return; // Invalid auth
+    }
+    if (auth->studentId != NULL) {
+        freeString(auth->studentId); // Free student ID
+        auth->studentId = NULL; // Reset student ID
+    }
+    if (auth->password != NULL) {
+        freeString(auth->password); // Free password
+        auth->password = NULL; // Reset password
+    }
+    if (auth->userData != NULL) {
+        FreeUserData(auth->userData); // Free user data
+        auth->userData = NULL; // Reset user data
+    }
 }
 
 void FreeUserData(UserData* userData) {
@@ -66,4 +83,5 @@ void FreeUserData(UserData* userData) {
     if (userData->leb2 != NULL) {
         FreeLEB2(userData->leb2); // Free LEB2 data
     }
+    free(userData); // Free user data structure
 }
