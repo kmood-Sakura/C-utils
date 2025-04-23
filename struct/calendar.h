@@ -21,4 +21,10 @@ typedef struct Task {
     DateTime dueDate; // task due date (optional to extend setEnd)
 } Task;
 
+Calendar* createCalendar(Date date, Task* task);
+Task* createTask(string title, string location, DateTime setBegin, DateTime setEnd, DateTime dueDate);
+
+void FreeCalendar(Calendar* calendar);
+void FreeTask(Task* task);
+
 #endif // CALENDAR_H
