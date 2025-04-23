@@ -8,11 +8,6 @@
 #include "../common/status.h"
 #include "../common/log.h"
 
-typedef struct Calendar {
-    Date date; // date
-    Task* tasks; // list of tasks
-} Calendar;
-
 typedef struct Task {
     string title; // task title
     string location; // task location
@@ -20,6 +15,11 @@ typedef struct Task {
     DateTime setEnd; // task set date and time
     DateTime dueDate; // task due date (optional to extend setEnd)
 } Task;
+
+typedef struct Calendar {
+    Date date; // date
+    Task* tasks; // list of tasks
+} Calendar;
 
 Calendar* createCalendar(Date date, Task* task);
 Task* createTask(string title, string location, DateTime setBegin, DateTime setEnd, DateTime dueDate);

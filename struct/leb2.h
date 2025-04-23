@@ -19,17 +19,62 @@ typedef string ClassCode;
 
 #include "file.h"
 
-typedef struct LEB2{
-    Semester* semesters; // semester code
-} LEB2;
+typedef struct Assignment {
+    string head;
+    string description;
+    DateTime assignDate;
+    DateTime dueDate;
+} Assignment;
 
-typedef struct Semester{
-    Class* classes;
-    // struct Semester* next;
-    // struct Semester* back;
-} Semester;
+typedef struct AssignmentActivity {
+    Assignment* assignments; // list of assignments
+} AssignmentActivity;
 
-typedef struct Class{
+typedef struct Dashboard {
+    string description;
+} Dashboard;
+
+typedef struct Syllabus {
+    string description;
+} Syllabus;
+
+typedef struct LearningActivity {
+    string name;
+    string description;
+    string imageUrl;
+} LearningActivity;
+
+typedef struct Attendance {
+    string name;
+    string description;
+    string imageUrl;
+} Attendance;
+
+typedef struct ScoreBook {
+    string name;
+    string description;
+    string imageUrl;
+} ScoreBook;
+
+typedef struct LearnIt {
+    string name;
+    string description;
+    string imageUrl;
+} LearnIt;
+
+typedef struct Survey {
+    string name;
+    string description;
+    string imageUrl;
+} Survey;
+
+typedef struct Members {
+    string name;
+    string description;
+    string imageUrl;
+} Members;
+
+typedef struct Class {
     Dashboard* dashboard;
     Syllabus* syllabus;
     AssignmentActivity* assignmentActivity;
@@ -42,61 +87,13 @@ typedef struct Class{
     Members* members;
 } Class;
 
-typedef struct Dashboard{
-    // urlPath path;
-    string description;
-} Dashboard;
+typedef struct Semester {
+    Class* classes;
+} Semester;
 
-typedef struct Syllabus{
-    string description;
-} Syllabus;
-
-typedef struct AssignmentActivity{
-    Assignment* assignments; // list of assignments
-} AssignmentActivity;
-
-typedef struct Assignment {
-    string head;
-    string description;
-    DateTime assignDate;
-    DateTime dueDate;
-} Assignment;
-
-typedef struct LearningActivity{
-    string name;
-    string description;
-    string imageUrl;
-} LearningActivity;
-
-typedef struct Attendance{
-    string name;
-    string description;
-    string imageUrl;
-} Attendance;
-
-typedef struct ScoreBook{
-    string name;
-    string description;
-    string imageUrl;
-} ScoreBook;
-
-typedef struct LearnIt{
-    string name;
-    string description;
-    string imageUrl;
-} LearnIt;
-
-typedef struct Survey{
-    string name;
-    string description;
-    string imageUrl;
-} Survey;
-
-typedef struct Members{
-    string name;
-    string description;
-    string imageUrl;
-} Members;
+typedef struct LEB2 {
+    Semester* semesters; // semester code
+} LEB2;
 
 Dashboard* createDashboard(const string description);
 Syllabus* createSyllabus(const string description);
