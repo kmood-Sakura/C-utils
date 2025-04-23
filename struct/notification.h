@@ -15,5 +15,6 @@ typedef struct Notification {
 } Notification;
 
 Notification* createNotification(const string header, const string title, DateTime dueDate);
+void FreeNotification(Notification* notification);
 
 #endif // NOTIFICATION_H
