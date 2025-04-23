@@ -27,9 +27,10 @@ typedef struct Folder {
 #include <string.h>
 #include <dirent.h>
 
+
 File* initFile();
 File* createFile(const string filename, const string dir, const string fileType);
-File* createFileDirPath(const string filename, const Path dirPath, const string fileType);
+File* createFileWithPath(const Path filename, const Path dirPath, const Path fileType);
 code MakeFile(const File* file);
 code MakeFolder(const Folder* folder);
 code MakeFilePath(const string filepath);
