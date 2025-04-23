@@ -32,6 +32,8 @@ typedef struct UserData {
     LEB2* leb2; // list of courses
 } UserData;
 
-Auth* createAuth(const string studentId, const string password);
+Auth initAuth(); // initialize auth
+code getAuth(Auth* auth); // get auth from user
+code verifyAuth(const Auth* auth); // verify auth
 
 #endif // AUTH_H
