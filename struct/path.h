@@ -3,7 +3,10 @@
 
 #include "../datatype/int-type.h"
 #include "../datatype/string-type.h"
+
 #include "../common/status.h"
+#include "../common/log.h"
+#include "../common/request.h"
 
 typedef struct Path {
     string path;
