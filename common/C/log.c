@@ -91,3 +91,39 @@ void LogStatus(const Status* status) {
             break;
     }
 }
+
+void LogStatusMsg(const Status* status) {
+    switch(status->code) {
+        case 0:
+            return Error(status->msg);
+        case 1:
+            return Success(status->msg);
+        case -1:
+            return Warning(status->msg);
+        default:
+            return;
+    }
+}
+
+code LogFetal(const Status* status) {
+    if (status == NULL) {
+        Error("Status is NULL");
+        return 0; // Invalid status
+    }
+    switch(status->code) {
+        case 0:
+            LogMsg("Status Failed");
+            Error(status->msg);
+            return 0;
+        case 1:
+            // return Success(status->msg);
+            return 1;
+        case -1:
+            LogMsg("Status Warning");
+            Warning(status->msg);
+            return -1;
+        default:
+            Error("Unknown status code");
+            break;
+    }
+}
