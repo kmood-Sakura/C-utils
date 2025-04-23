@@ -144,8 +144,17 @@ Path mergePaths(const Path* paths, const uint8 count) {
         Warning("Total length is zero");
         return newPath; // Invalid paths
     }
+
+    string* totolStrings = (string*)malloc(sizeof(string) * count);
+    if (totolStrings == NULL) {
+        Error("Failed to allocate memory for total strings");
+        return newPath; // Memory allocation failed
+    }
+    for (uint8 i = 0; i < count; i++) {
+        totolStrings[i] = paths[i].path;
+    }
     
-    string mergedPath = mergeStringsLen(paths, count, totalLength);
+    string mergedPath = mergeStringsLen(totolStrings, count, totalLength);
     if (mergedPath == NULL) {
         Error("Failed to merge paths");
         return newPath; // Memory allocation failed

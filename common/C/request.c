@@ -1,6 +1,8 @@
 #include "../request.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 code requestConfirm() {
     printf("Comfirm Permission (default is no) 'y'= yes, 'n'= no\n");
