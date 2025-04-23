@@ -20,14 +20,6 @@ typedef struct Folder {
     Path dirPath; // folder path
 } Folder;
 
-#include "../file.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
-
-
 File* initFile();
 File* createFile(const string filename, const string dir, const string fileType);
 File* createFileWithPath(const Path filename, const Path dirPath, const Path fileType);
