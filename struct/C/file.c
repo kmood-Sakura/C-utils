@@ -81,7 +81,7 @@ code MakeFolder(const Folder* folder) {
         return 0;
     }
     string folderPath = createDirPath(folder->folderName, folder->dirPath).path;
-    return MakeFOlderPath(folderPath);
+    return MakeFolderPath(folderPath);
 }
 
 code MakeFilePath(const string filepath) {

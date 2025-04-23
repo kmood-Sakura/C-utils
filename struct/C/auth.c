@@ -9,6 +9,7 @@ Auth initAuth() {
     auth.studentId = NULL;
     auth.password = NULL;
     auth.userData = NULL;
+    return auth; // Initialize auth structure
 }
 
 code getAuth(Auth* auth) {
@@ -17,14 +18,15 @@ code getAuth(Auth* auth) {
     }
     string input;
     input = requestString(MAX_STUDENT_ID, "studentId");
-    if(input == NULL || input == '\0') {
+    if(input == NULL) {
         return 0;
     }
     input = requestString(MAX_PASSWORD_LEN, "password");
-    if(input == NULL || input == '\0') {
+    if(input == NULL) {
         auth->studentId = NULL;
         return 0;
     }
+    return 1; // Success
 }
 
 code verifyAuth(const Auth* auth) {

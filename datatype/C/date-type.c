@@ -18,38 +18,7 @@ static uint8 getDaysInMonth(uint8 month, uint16 year) {
     return daysInMonth[month];
 }
 
-/* Time-tm conversion functions */
-static struct tm timeToTm(const Time* time) {
-    struct tm tm_time = {0};
-    
-    tm_time.tm_year = time->year - 1900;  // Convert from full year to years since 1900
-    tm_time.tm_mon = time->month - 1;     // tm_mon is 0-11
-    tm_time.tm_mday = time->day;
-    tm_time.tm_hour = time->hour;
-    tm_time.tm_min = time->minute;
-    tm_time.tm_sec = time->second;
-    tm_time.tm_isdst = -1;                // Let system determine DST
-    
-    return tm_time;
-}
-
-static Time* tmToTime(const struct tm* tm_time) {
-    Time* time = (Time*)malloc(sizeof(Time));
-    if (time == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return NULL;
-    }
-    
-    time->year = tm_time->tm_year + 1900;  // Convert from years since 1900 to full year
-    time->month = tm_time->tm_mon + 1;     // Convert 0-11 to 1-12
-    time->day = tm_time->tm_mday;
-    time->hour = tm_time->tm_hour;
-    time->minute = tm_time->tm_min;
-    time->second = tm_time->tm_sec;
-    time->millisecond = 0;                 // tm doesn't have milliseconds
-    
-    return time;
-}
+/* Time-tm conversion functions - Removed unused static functions */
 
 /*
  * Log Functions
@@ -529,7 +498,7 @@ char* dateToString(const Date* date) {
         return NULL;
     }
     
-    char* str = (char*)malloc(11 * sizeof(char));  // YYYY-MM-DD\0
+    char* str = (char*)malloc(12 * sizeof(char));  // YYYY-MM-DD\0 (increased from 11 to 12)
     if (str == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         return NULL;
@@ -544,7 +513,7 @@ char* clockToString(const Clock* clock) {
         return NULL;
     }
     
-    char* str = (char*)malloc(9 * sizeof(char));  // HH:MM:SS\0
+    char* str = (char*)malloc(10 * sizeof(char));  // HH:MM:SS\0 (increased from 9 to 10)
     if (str == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         return NULL;
@@ -559,7 +528,7 @@ char* timeToString(const Time* time) {
         return NULL;
     }
     
-    char* str = (char*)malloc(24 * sizeof(char));  // YYYY-MM-DD HH:MM:SS.mmm\0
+    char* str = (char*)malloc(30 * sizeof(char));  // YYYY-MM-DD HH:MM:SS.mmm\0 (increased from 24 to 30)
     if (str == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         return NULL;
@@ -578,7 +547,7 @@ char* dateTimeInfoToString(const DateTimeInfo* info) {
         return NULL;
     }
     
-    char* str = (char*)malloc(30 * sizeof(char));  // YYYY-MM-DD HH:MM:SS UTC+X\0
+    char* str = (char*)malloc(35 * sizeof(char));  // YYYY-MM-DD HH:MM:SS UTC+X\0 (increased from 30 to 35)
     if (str == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         return NULL;
@@ -593,7 +562,7 @@ char* dateTimeInfoToString(const DateTimeInfo* info) {
 }
 
 char* timeValueToString(TimeValue value) {
-    char* str = (char*)malloc(18 * sizeof(char));  // YYYYMMDDHHMMSSmmm\0
+    char* str = (char*)malloc(20 * sizeof(char));  // YYYYMMDDHHMMSSmmm\0 (increased from 18 to 20)
     if (str == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         return NULL;

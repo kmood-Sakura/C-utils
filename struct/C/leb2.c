@@ -327,7 +327,7 @@ void freeClass(Class* class, int freeComponents) {
         freeScoreBook(class->scoreBook);
         freeLearnIt(class->learnIt);
         freeSurvey(class->survey);
-        freeFile(class->files);
+        FreeFile(class->files);
         freeMembers(class->members);
     }
     

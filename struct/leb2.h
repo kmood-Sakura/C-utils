@@ -6,9 +6,6 @@
 #define MAX_CLASS_CODE 10 // `{subjectID}{id}` Ex MTH101
 #define CLASS_FORMAT "%s%d" // `{subjectID}{id}` Ex MTH101
 
-typedef string SemesterCode;
-typedef string ClassCode;
-
 #include "../datatype/int-type.h"
 #include "../datatype/string-type.h"
 #include "../datatype/date-type.h"
@@ -18,6 +15,9 @@ typedef string ClassCode;
 #include "../common/request.h"
 
 #include "file.h"
+
+typedef string SemesterCode;
+typedef string ClassCode;
 
 typedef struct Assignment {
     string head;

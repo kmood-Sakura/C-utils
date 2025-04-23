@@ -124,6 +124,7 @@ code LogFetal(const Status* status) {
             return -1;
         default:
             Error("Unknown status code");
-            break;
+            return 0;
     }
+    return 0;
 }

@@ -44,10 +44,19 @@ string requestString(const uint32 maxLength, const string prompt) {
         Error("Memory allocation failed");
         return NULL; // Memory allocation failed
     }
-    if (prompt != NULL) {
-        printf("%s : ", prompt); // Print prompt if provided
+    printf("%s: ", prompt);
+    fgets(str, maxLength + 1, stdin); // Read string from user
+    uint32 len = stringLen(str);
+    if (len == 0) {
+        free(str);
+        return NULL; // Empty string
     }
-    fgets(str, maxLength + 1, stdin); // Read string from input
-    str[stringLen(str)] = '\0'; // Remove newline character
+    if (str[len - 1] == '\n') {
+        str[len - 1] = '\0'; // Remove newline character
+    }
+    if (len > maxLength) {
+        str[maxLength] = '\0'; // Ensure null termination
+    }
+    
     return str;
 }
