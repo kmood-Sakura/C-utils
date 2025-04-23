@@ -10,7 +10,7 @@
 
 typedef struct Path {
     string path;
-    uint32 length; // length of path
+    uint32 length;
 } Path; // Path is a string
 
 Path initPath(); // initialize path
