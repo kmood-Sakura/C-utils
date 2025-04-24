@@ -14,6 +14,6 @@ void LogMsg(const string msg);
 void Details(const string detail);
 void LogStatus(const Status* status);
 void LogStatusMsg(const Status* status);
-code LogFetal(const Status* status);
+code LogFatal(const Status* status);
 
 #endif// LOG_STATUS_H

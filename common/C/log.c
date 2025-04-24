@@ -105,7 +105,7 @@ void LogStatusMsg(const Status* status) {
     }
 }
 
-code LogFetal(const Status* status) {
+code LogFatal(const Status* status) {
     if (status == NULL) {
         Error("Status is NULL");
         return 0; // Invalid status
