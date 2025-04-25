@@ -5,6 +5,11 @@
 
 typedef char* string; // string size upon uint32
 
+typedef struct textline {
+    string line; // text line
+    struct textline* nextline; // next line
+} textline;
+
 uint32 stringLen(const string str); // get string length
 code stringCmp(const string str1, const string str2); // compare two strings
 

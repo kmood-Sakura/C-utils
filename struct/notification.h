@@ -14,6 +14,12 @@ typedef struct Notification {
     DateTime dueDate; // notification date and time
 } Notification;
 
+typedef struct NotificationList {
+    Notification notification; // notification
+    struct NotificationList* next; // next notification
+    struct NotificationList* prev; // previous notification
+} NotificationList;
+
 Notification* createNotification(const string header, const string title, DateTime dueDate);
 void FreeNotification(Notification* notification);
 

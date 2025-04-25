@@ -2,357 +2,331 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-// Assuming Error is a function that handles error reporting
-// Assuming string is defined as typedef char* string;
-
-// Function to create Dashboard structure
-Dashboard* createDashboard(const string description) {
-    Dashboard* dashboard = (Dashboard*)malloc(sizeof(Dashboard));
-    if (dashboard == NULL) {
-        Error("Memory allocation failed for Dashboard");
-        return NULL;
-    }
-    
-    dashboard->description = description ? createString(description) : NULL;
-    return dashboard;
-}
-
-// Function to create Syllabus structure
-Syllabus* createSyllabus(const string description) {
-    Syllabus* syllabus = (Syllabus*)malloc(sizeof(Syllabus));
-    if (syllabus == NULL) {
-        Error("Memory allocation failed for Syllabus");
-        return NULL;
-    }
-    
-    syllabus->description = description ? createString(description) : NULL;
-    return syllabus;
-}
-
-// Function to create Assignment structure
-Assignment* createAssignment(const string head, const string description, 
-                            DateTime assignDate, DateTime dueDate) {
-    Assignment* assignment = (Assignment*)malloc(sizeof(Assignment));
-    if (assignment == NULL) {
-        Error("Memory allocation failed for Assignment");
-        return NULL;
-    }
-    
-    assignment->head = head ? createString(head) : NULL;
-    assignment->description = description ? createString(description) : NULL;
-    assignment->assignDate = assignDate;
-    assignment->dueDate = dueDate;
-    
+// Create Assignment (no pointer in the structure)
+Assignment createAssignment(const string head, const string description, DateTime assignDate, DateTime dueDate) {
+    Assignment assignment;
+    assignment.head = createString(head);
+    assignment.description = createString(description);
+    assignment.assignDate = assignDate;
+    assignment.dueDate = dueDate;
     return assignment;
 }
 
-// Function to create AssignmentActivity structure
-AssignmentActivity* createAssignmentActivity(const Assignment* assignments) {
-    AssignmentActivity* activity = (AssignmentActivity*)malloc(sizeof(AssignmentActivity));
-    if (activity == NULL) {
-        Error("Memory allocation failed for AssignmentActivity");
-        return NULL;
+// Create AssignmentList node
+AssignmentList* createAssignmentList(Assignment assignment, AssignmentList* next, AssignmentList* prev) {
+    AssignmentList* newNode = (AssignmentList*)malloc(sizeof(AssignmentList));
+    if (newNode != NULL) {
+        newNode->assignment = assignment;
+        newNode->next = next;
+        newNode->prev = prev;
     }
-    
-    activity->assignments = (Assignment*)assignments;
+    return newNode;
+}
+
+// Create AssignmentActivity
+AssignmentActivity* createAssignmentActivity() {
+    AssignmentActivity* activity = (AssignmentActivity*)malloc(sizeof(AssignmentActivity));
+    if (activity != NULL) {
+        activity->assignmentList = NULL; // Initialize with empty list
+    }
     return activity;
 }
 
-// Function to create LearningActivity structure
+// Create Dashboard
+Dashboard* createDashboard(const string description) {
+    Dashboard* dashboard = (Dashboard*)malloc(sizeof(Dashboard));
+    if (dashboard != NULL) {
+        dashboard->description = createString(description);
+    }
+    return dashboard;
+}
+
+// Create Syllabus
+Syllabus* createSyllabus(const string description) {
+    Syllabus* syllabus = (Syllabus*)malloc(sizeof(Syllabus));
+    if (syllabus != NULL) {
+        syllabus->description = createString(description);
+    }
+    return syllabus;
+}
+
+// Create LearningActivity
 LearningActivity* createLearningActivity(const string name, const string description, const string imageUrl) {
     LearningActivity* activity = (LearningActivity*)malloc(sizeof(LearningActivity));
-    if (activity == NULL) {
-        Error("Memory allocation failed for LearningActivity");
-        return NULL;
+    if (activity != NULL) {
+        activity->name = createString(name);
+        activity->description = createString(description);
+        activity->imageUrl = createString(imageUrl);
     }
-    
-    activity->name = name ? createString(name) : NULL;
-    activity->description = description ? createString(description) : NULL;
-    activity->imageUrl = imageUrl ? createString(imageUrl) : NULL;
-    
     return activity;
 }
 
-// Function to create Attendance structure
+// Create Attendance
 Attendance* createAttendance(const string name, const string description, const string imageUrl) {
     Attendance* attendance = (Attendance*)malloc(sizeof(Attendance));
-    if (attendance == NULL) {
-        Error("Memory allocation failed for Attendance");
-        return NULL;
+    if (attendance != NULL) {
+        attendance->name = createString(name);
+        attendance->description = createString(description);
+        attendance->imageUrl = createString(imageUrl);
     }
-    
-    attendance->name = name ? createString(name) : NULL;
-    attendance->description = description ? createString(description) : NULL;
-    attendance->imageUrl = imageUrl ? createString(imageUrl) : NULL;
-    
     return attendance;
 }
 
-// Function to create ScoreBook structure
+// Create ScoreBook
 ScoreBook* createScoreBook(const string name, const string description, const string imageUrl) {
     ScoreBook* scoreBook = (ScoreBook*)malloc(sizeof(ScoreBook));
-    if (scoreBook == NULL) {
-        Error("Memory allocation failed for ScoreBook");
-        return NULL;
+    if (scoreBook != NULL) {
+        scoreBook->name = createString(name);
+        scoreBook->description = createString(description);
+        scoreBook->imageUrl = createString(imageUrl);
     }
-    
-    scoreBook->name = name ? createString(name) : NULL;
-    scoreBook->description = description ? createString(description) : NULL;
-    scoreBook->imageUrl = imageUrl ? createString(imageUrl) : NULL;
-    
     return scoreBook;
 }
 
-// Function to create LearnIt structure
+// Create LearnIt
 LearnIt* createLearnIt(const string name, const string description, const string imageUrl) {
     LearnIt* learnIt = (LearnIt*)malloc(sizeof(LearnIt));
-    if (learnIt == NULL) {
-        Error("Memory allocation failed for LearnIt");
-        return NULL;
+    if (learnIt != NULL) {
+        learnIt->name = createString(name);
+        learnIt->description = createString(description);
+        learnIt->imageUrl = createString(imageUrl);
     }
-    
-    learnIt->name = name ? createString(name) : NULL;
-    learnIt->description = description ? createString(description) : NULL;
-    learnIt->imageUrl = imageUrl ? createString(imageUrl) : NULL;
-    
     return learnIt;
 }
 
-// Function to create Survey structure
+// Create Survey
 Survey* createSurvey(const string name, const string description, const string imageUrl) {
     Survey* survey = (Survey*)malloc(sizeof(Survey));
-    if (survey == NULL) {
-        Error("Memory allocation failed for Survey");
-        return NULL;
+    if (survey != NULL) {
+        survey->name = createString(name);
+        survey->description = createString(description);
+        survey->imageUrl = createString(imageUrl);
     }
-    
-    survey->name = name ? createString(name) : NULL;
-    survey->description = description ? createString(description) : NULL;
-    survey->imageUrl = imageUrl ? createString(imageUrl) : NULL;
-    
     return survey;
 }
 
-// Function to create Members structure
+// Create Members
 Members* createMembers(const string name, const string description, const string imageUrl) {
     Members* members = (Members*)malloc(sizeof(Members));
-    if (members == NULL) {
-        Error("Memory allocation failed for Members");
-        return NULL;
+    if (members != NULL) {
+        members->name = createString(name);
+        members->description = createString(description);
+        members->imageUrl = createString(imageUrl);
     }
-    
-    members->name = name ? createString(name) : NULL;
-    members->description = description ? createString(description) : NULL;
-    members->imageUrl = imageUrl ? createString(imageUrl) : NULL;
-    
     return members;
 }
 
-// Function to create Class structure
-Class* createClass(Dashboard* dashboard, Syllabus* syllabus, AssignmentActivity* assignmentActivity,
-                  LearningActivity* learningActivity, Attendance* attendance, ScoreBook* scoreBook,
-                  LearnIt* learnIt, Survey* survey, File* files, Members* members) {
-    Class* class = (Class*)malloc(sizeof(Class));
-    if (class == NULL) {
-        Error("Memory allocation failed for Class");
-        return NULL;
-    }
-    
-    class->dashboard = dashboard;
-    class->syllabus = syllabus;
-    class->assignmentActivity = assignmentActivity;
-    class->learningActivity = learningActivity;
-    class->attendance = attendance;
-    class->scoreBook = scoreBook;
-    class->learnIt = learnIt;
-    class->survey = survey;
-    class->files = files;
-    class->members = members;
-    
+// Create Class
+Class createClass(const string classId, Dashboard* dashboard, Syllabus* syllabus,
+                 AssignmentActivity* assignmentActivity, LearningActivity* learningActivity,
+                 Attendance* attendance, ScoreBook* scoreBook, LearnIt* learnIt,
+                 Survey* survey, File* files, Members* members) {
+    Class class;
+    class.classId = createString(classId);
+    class.dashboard = dashboard;
+    class.syllabus = syllabus;
+    class.assignmentActivity = assignmentActivity;
+    class.learningActivity = learningActivity;
+    class.attendance = attendance;
+    class.scoreBook = scoreBook;
+    class.learnIt = learnIt;
+    class.survey = survey;
+    class.files = files;
+    class.members = members;
     return class;
 }
 
-// Function to create Semester structure
-Semester* createSemester(const Class* classdata) {
-    if (classdata == NULL) {
-        return NULL;
+// Create ClassList node
+ClassList* createClassList(Class class, ClassList* next, ClassList* prev) {
+    ClassList* newNode = (ClassList*)malloc(sizeof(ClassList));
+    if (newNode != NULL) {
+        newNode->class = class;
+        newNode->next = next;
+        newNode->prev = prev;
     }
-    
-    Semester* sem = (Semester*)malloc(sizeof(Semester));
-    if (sem == NULL) {
-        Error("Memory allocation failed for Semester");
-        return NULL;
-    }
-
-    sem->classes = (Class*)classdata;
-    
-    return sem;
+    return newNode;
 }
 
-// Function to create LEB2 structure
-LEB2* createLEB2(const Semester* semesterdata) {
-    if (semesterdata == NULL) {
-        return NULL;
-    }
+// Create Semester
+Semester createSemester(const string semesterId, ClassList* classList) {
+    Semester semester;
+    semester.semesterId = createString(semesterId);
+    semester.classList = classList;
+    return semester;
+}
 
+// Create SemesterList node
+SemesterList* createSemesterList(Semester semester, SemesterList* next, SemesterList* prev) {
+    SemesterList* newNode = (SemesterList*)malloc(sizeof(SemesterList));
+    if (newNode != NULL) {
+        newNode->semester = semester;
+        newNode->next = next;
+        newNode->prev = prev;
+    }
+    return newNode;
+}
+
+// Create LEB2
+LEB2* createLEB2() {
     LEB2* leb2 = (LEB2*)malloc(sizeof(LEB2));
-    if (leb2 == NULL) {
-        Error("Memory allocation failed for LEB2");
-        return NULL;
+    if (leb2 != NULL) {
+        leb2->semesterList = NULL; // Initialize with empty list
     }
-
-    leb2->semesters = (Semester*)semesterdata;
     return leb2;
 }
 
-// Function to free Dashboard structure
-void FreeDashboard(Dashboard* dashboard) {
-    if (dashboard == NULL) return;
-    
-    if (dashboard->description) free(dashboard->description);
-    free(dashboard);
+// Helper function to free strings in structures with name, description, imageUrl
+void freeNameDescImage(string name, string description, string imageUrl) {
+    free(name);
+    free(description);
+    free(imageUrl);
 }
 
-// Function to free Syllabus structure
-void FreeSyllabus(Syllabus* syllabus) {
-    if (syllabus == NULL) return;
-    
-    if (syllabus->description) free(syllabus->description);
-    free(syllabus);
-}
-
-// Function to free Assignment structure
-void FreeAssignment(Assignment* assignment) {
-    if (assignment == NULL) return;
-    
-    if (assignment->head) free(assignment->head);
-    if (assignment->description) free(assignment->description);
-    free(assignment);
-}
-
-// Function to Free AssignmentActivity structure
-void FreeAssignmentActivity(AssignmentActivity* activity) {
-    if (activity == NULL) return;
-    
-    if (activity->assignments) {
-        Assignment* current = activity->assignments;
-        while (current && current->head) {
-            Assignment* next = current + 1;
-            FreeAssignment(current);
-            current = next;
-        }
+// Function to free the memory allocated for an Assignment
+void freeAssignment(Assignment* assignment) {
+    if (assignment != NULL) {
+        free(assignment->head);
+        free(assignment->description);
+        // Note: DateTime is a value type, not a pointer, so no need to free it
     }
-    
-    free(activity);
 }
 
-// Function to Free LearningActivity structure
-void FreeLearningActivity(LearningActivity* activity) {
-    if (activity == NULL) return;
-    
-    if (activity->name) free(activity->name);
-    if (activity->description) free(activity->description);
-    if (activity->imageUrl) free(activity->imageUrl);
-    free(activity);
-}
-
-// Function to Free Attendance structure
-void FreeAttendance(Attendance* attendance) {
-    if (attendance == NULL) return;
-    
-    if (attendance->name) free(attendance->name);
-    if (attendance->description) free(attendance->description);
-    if (attendance->imageUrl) free(attendance->imageUrl);
-    free(attendance);
-}
-
-// Function to Free ScoreBook structure
-void FreeScoreBook(ScoreBook* scoreBook) {
-    if (scoreBook == NULL) return;
-    
-    if (scoreBook->name) free(scoreBook->name);
-    if (scoreBook->description) free(scoreBook->description);
-    if (scoreBook->imageUrl) free(scoreBook->imageUrl);
-    free(scoreBook);
-}
-
-// Function to Free LearnIt structure
-void FreeLearnIt(LearnIt* learnIt) {
-    if (learnIt == NULL) return;
-    
-    if (learnIt->name) free(learnIt->name);
-    if (learnIt->description) free(learnIt->description);
-    if (learnIt->imageUrl) free(learnIt->imageUrl);
-    free(learnIt);
-}
-
-// Function to Free Survey structure
-void FreeSurvey(Survey* survey) {
-    if (survey == NULL) return;
-    
-    if (survey->name) free(survey->name);
-    if (survey->description) free(survey->description);
-    if (survey->imageUrl) free(survey->imageUrl);
-    free(survey);
-}
-
-// Function to Free Members structure
-void FreeMembers(Members* members) {
-    if (members == NULL) return;
-    
-    if (members->name) free(members->name);
-    if (members->description) free(members->description);
-    if (members->imageUrl) free(members->imageUrl);
-    free(members);
-}
-
-// Function to Free Class structure
-void FreeClass(Class* class) {
-    if (class == NULL) return;
-    
-    FreeDashboard(class->dashboard);
-    FreeSyllabus(class->syllabus);
-    FreeAssignmentActivity(class->assignmentActivity);
-    FreeLearningActivity(class->learningActivity);
-    FreeAttendance(class->attendance);
-    FreeScoreBook(class->scoreBook);
-    FreeLearnIt(class->learnIt);
-    FreeSurvey(class->survey);
-    FreeFile(class->files);
-    FreeMembers(class->members);
-    
-    free(class);
-}
-
-// Function to Free Semester structure
-void FreeSemester(Semester* semester) {
-    if (semester == NULL) return;
-    
-    if (semester->classes) {
-        Class* current = semester->classes;
-        while (current) {
-            Class* next = current + 1;
-            FreeClass(current);
-            current = next;
-        }
+// Function to free the memory allocated for an AssignmentList
+void freeAssignmentList(AssignmentList* head) {
+    AssignmentList* current = head;
+    while (current != NULL) {
+        AssignmentList* next = current->next;
+        freeAssignment(&current->assignment);
+        free(current);
+        current = next;
     }
-    
-    free(semester);
 }
 
-// Function to Free LEB2 structure
-void FreeLEB2(LEB2* leb2) {
-    if (leb2 == NULL) return;
-    
-    if (leb2->semesters) {
-        Semester* current = leb2->semesters;
-        while (current) {
-            Semester* next = current + 1;
-            FreeSemester(current);
-            current = next;
-        }
+// Function to free the memory allocated for AssignmentActivity
+void freeAssignmentActivity(AssignmentActivity* activity) {
+    if (activity != NULL) {
+        freeAssignmentList(activity->assignmentList);
+        free(activity);
     }
-    free(leb2);
+}
+
+// Function to free the memory allocated for a Dashboard
+void freeDashboard(Dashboard* dashboard) {
+    if (dashboard != NULL) {
+        free(dashboard->description);
+        free(dashboard);
+    }
+}
+
+// Function to free the memory allocated for a Syllabus
+void freeSyllabus(Syllabus* syllabus) {
+    if (syllabus != NULL) {
+        free(syllabus->description);
+        free(syllabus);
+    }
+}
+
+// Function to free the memory allocated for a LearningActivity
+void freeLearningActivity(LearningActivity* activity) {
+    if (activity != NULL) {
+        freeNameDescImage(activity->name, activity->description, activity->imageUrl);
+        free(activity);
+    }
+}
+
+// Function to free the memory allocated for Attendance
+void freeAttendance(Attendance* attendance) {
+    if (attendance != NULL) {
+        freeNameDescImage(attendance->name, attendance->description, attendance->imageUrl);
+        free(attendance);
+    }
+}
+
+// Function to free the memory allocated for ScoreBook
+void freeScoreBook(ScoreBook* scoreBook) {
+    if (scoreBook != NULL) {
+        freeNameDescImage(scoreBook->name, scoreBook->description, scoreBook->imageUrl);
+        free(scoreBook);
+    }
+}
+
+// Function to free the memory allocated for LearnIt
+void freeLearnIt(LearnIt* learnIt) {
+    if (learnIt != NULL) {
+        freeNameDescImage(learnIt->name, learnIt->description, learnIt->imageUrl);
+        free(learnIt);
+    }
+}
+
+// Function to free the memory allocated for Survey
+void freeSurvey(Survey* survey) {
+    if (survey != NULL) {
+        freeNameDescImage(survey->name, survey->description, survey->imageUrl);
+        free(survey);
+    }
+}
+
+// Function to free the memory allocated for Members
+void freeMembers(Members* members) {
+    if (members != NULL) {
+        freeNameDescImage(members->name, members->description, members->imageUrl);
+        free(members);
+    }
+}
+
+// Function to free the memory allocated for a Class
+void freeClass(Class* class) {
+    if (class != NULL) {
+        free(class->classId);
+        freeDashboard(class->dashboard);
+        freeSyllabus(class->syllabus);
+        freeAssignmentActivity(class->assignmentActivity);
+        freeLearningActivity(class->learningActivity);
+        freeAttendance(class->attendance);
+        freeScoreBook(class->scoreBook);
+        freeLearnIt(class->learnIt);
+        freeSurvey(class->survey);
+        // Assuming there's a function to free File
+        // freeFile(class->files);
+        freeMembers(class->members);
+    }
+}
+
+// Function to free the memory allocated for a ClassList
+void freeClassList(ClassList* head) {
+    ClassList* current = head;
+    while (current != NULL) {
+        ClassList* next = current->next;
+        freeClass(&current->class);
+        free(current);
+        current = next;
+    }
+}
+
+// Function to free the memory allocated for a Semester
+void freeSemester(Semester* semester) {
+    if (semester != NULL) {
+        free(semester->semesterId);
+        freeClassList(semester->classList);
+    }
+}
+
+// Function to free the memory allocated for a SemesterList
+void freeSemesterList(SemesterList* head) {
+    SemesterList* current = head;
+    while (current != NULL) {
+        SemesterList* next = current->next;
+        freeSemester(&current->semester);
+        free(current);
+        current = next;
+    }
+}
+
+// Function to free the memory allocated for an LEB2
+void freeLEB2(LEB2* leb2) {
+    if (leb2 != NULL) {
+        freeSemesterList(leb2->semesterList);
+        free(leb2);
+    }
 }

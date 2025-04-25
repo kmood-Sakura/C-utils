@@ -3,38 +3,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Calendar* createCalendar(Date date, Task* task) {
-    Calendar* calendar = (Calendar*)malloc(sizeof(Calendar));
-    if (calendar == NULL) {
-        fprintf(stderr, "Memory allocation failed for Calendar\n");
-        exit(EXIT_FAILURE);
-    }
-    calendar->date = date;
-    calendar->tasks = task;
-    return calendar;
-}
-
-Task* createTask(string title, string location, DateTime setBegin, DateTime setEnd, DateTime dueDate) {
-    Task* task = (Task*)malloc(sizeof(Task));
-    if (task == NULL) {
-        fprintf(stderr, "Memory allocation failed for Task\n");
-        exit(EXIT_FAILURE);
-    }
-    task->title = title;
-    task->location = location;
-    task->setBegin = setBegin;
-    task->setEnd = setEnd;
-    task->dueDate = dueDate;
+// Create Task
+Task createTask(const string title, const string location, DateTime setBegin, DateTime setEnd, DateTime dueDate) {
+    Task task;
+    task.title = createString(title);
+    task.location = createString(location);
+    task.setBegin = setBegin;
+    task.setEnd = setEnd;
+    task.dueDate = dueDate;
     return task;
 }
 
-void FreeCalendar(Calendar* calendar) {
-    if (calendar == NULL) return;
-    FreeTask(calendar->tasks);
-    free(calendar);
+// Create TaskList node
+TaskList* createTaskList(Task task, TaskList* next, TaskList* prev) {
+    TaskList* newNode = (TaskList*)malloc(sizeof(TaskList));
+    if (newNode != NULL) {
+        newNode->task = task;
+        newNode->next = next;
+        newNode->prev = prev;
+    }
+    return newNode;
 }
 
-void FreeTask(Task* task) {
-    if (task == NULL) return;
-    free(task);
+// Create Calendar
+Calendar* createCalendar(Date date, TaskList* taskList) {
+    Calendar* calendar = (Calendar*)malloc(sizeof(Calendar));
+    if (calendar != NULL) {
+        calendar->date = date;
+        calendar->taskList = taskList;
+    }
+    return calendar;
+}
+
+void freeTask(Task* task) {
+    if (task != NULL) {
+        free(task->title);     // Free title string
+        free(task->location);  // Free location string
+        // Note: DateTime is a value type, not a pointer, so no need to free it
+    }
+}
+
+// Function to free the memory allocated for a TaskList
+void freeTaskList(TaskList* head) {
+    TaskList* current = head;
+    while (current != NULL) {
+        TaskList* next = current->next;
+        freeTask(&current->task); // Free the task in the list
+        free(current);
+        current = next;
+    }
+}
+
+// Function to free the memory allocated for a Calendar
+void freeCalendar(Calendar* calendar) {
+    if (calendar != NULL) {
+        freeTaskList(calendar->taskList);
+        free(calendar);
+    }
 }
