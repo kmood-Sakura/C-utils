@@ -4,6 +4,70 @@
 #include <stdlib.h>
 #include <string.h>
 
+error getCurrentPath(Path* pathObj) {
+    if (pathObj == NULL) {
+        return "Path pointer is NULL";
+    }
+    
+    // Initialize path to NULL in case we return early
+    pathObj->path = NULL;
+    pathObj->length = 0;
+    
+    // Initial buffer size
+    size_t bufferSize = 256;
+    string buffer = NULL;
+    
+    // Try with increasingly larger buffers until we succeed
+    while (1) {
+        buffer = (string)malloc(bufferSize);
+        if (buffer == NULL) {
+            return "Memory allocation failed";
+        }
+        
+        #ifdef _WIN32
+        // For Windows
+        if (_getcwd(buffer, bufferSize) != NULL) {
+            break; // Success
+        }
+        #else
+        // For POSIX systems (Linux, macOS)
+        if (getcwd(buffer, bufferSize) != NULL) {
+            break; // Success
+        }
+        #endif
+        
+        free(buffer);
+        
+        // If error is not because buffer is too small, return error
+        if (errno != ERANGE) {
+            return "Failed to get current directory";
+        }
+        
+        // Double the buffer size and try again
+        bufferSize *= 2;
+        if (bufferSize > 65536) {
+            return "Path is unreasonably long";
+        }
+    }
+    uint32 length = strlen(buffer);
+    if (length == 0) {
+        free(buffer);
+        return "Path is empty";
+    }
+    // Create string for path
+    error err = allocateStringLen(&pathObj->path, buffer, length);
+    if (err != NULL) {
+        free(buffer);
+        return err; // Memory allocation failed
+    }
+    pathObj->length = length;
+
+    // Free the temporary buffer
+    free(buffer);
+    
+    return NULL; // Success
+}
+
 error createPath(Path* pathTC,const string path) {
     if (pathTC == NULL) {
         return "Path To Create required"; // Invalid path pointer
@@ -106,6 +170,52 @@ error createDirPath(Path* folderPath, const Path folderName, const Path dirPath)
         return err; // Memory allocation failed
     }
     folderPath->length = dirPath.length + folderName.length + 1; // +1 for the '/' character
+    
+    return NULL; // Success
+}
+
+error createFolderPath(Path* folderPath, const string folderName, const Path dirPath) {
+    if (folderPath == NULL) {
+        return "Folder path not located yet"; // Invalid folder path
+    }
+    if (folderName == NULL || dirPath.path == NULL) {
+        return "Folder name and directory path are required"; // Invalid parameters
+    }
+    error err = NULL;
+    Path tempPath;
+    err = createPath(&tempPath, folderName); // Copy folder name
+    if (err != NULL) {
+        return err; // Memory allocation failed
+    }
+
+    err = createDirPath(folderPath, tempPath, dirPath); // Create folder path
+    if (err != NULL) {
+        return err; // Memory allocation failed
+    }
+    FreePathContent(&tempPath); // Free temporary path content
+    
+    return NULL; // Success
+}
+
+error createFolderPathLen(Path* folderPath, const string folderName, const Path dirPath, const uint32 length) {
+    if (folderPath == NULL) {
+        return "Folder path not located yet"; // Invalid folder path
+    }
+    if (folderName == NULL || dirPath.path == NULL) {
+        return "Folder name and directory path are required"; // Invalid parameters
+    }
+    error err = NULL;
+    Path tempPath;
+    err = createPathLen(&tempPath, folderName, length); // Copy folder name
+    if (err != NULL) {
+        return err; // Memory allocation failed
+    }
+
+    err = createDirPath(folderPath, tempPath, dirPath); // Create folder path
+    if (err != NULL) {
+        return err; // Memory allocation failed
+    }
+    FreePathContent(&tempPath); // Free temporary path content
     
     return NULL; // Success
 }

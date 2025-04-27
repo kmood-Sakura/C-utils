@@ -173,7 +173,7 @@ error MakeFolderByPath(const string folderPath) {
     }
 
     if (FolderExist(folderPath)) {
-        return "Folder already exists"; // Folder already exists
+        return NULL; // Folder already exists
     }
     
     if (mkdir(folderPath) == -1) {

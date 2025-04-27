@@ -18,6 +18,8 @@ error createPathLen(Path* pathTC, const string path, const uint32 length);
 error mergeTwoPaths(Path* pathTC,const Path path1, const Path path2);
 error mergeThreePaths(Path* pathTC, const Path path1, const Path path2, const Path path3);
 error createFilePath(Path* filepath, const Path filename, const Path dirPath, const Path fileType);
+error createFolderPath(Path* folderPath, const string folderName, const Path dirPath);
+error createFolderPathLen(Path* folderPath, const string folderName, const Path dirPath, const uint32 length);
 error createDirPath(Path* folderPath, const Path folderName, const Path dirPath);
 
 void FreePathContent(Path* path);
