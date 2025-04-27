@@ -3,24 +3,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void toLowerCase(char *c) {
+error toLowerCase(char *c) {
     if (c == NULL) {
-        Warning("Character pointer is NULL");
-        return;
+        return "Character pointer is NULL";
     }
     if (*c >= 'A' && *c <= 'Z') {
         *c += 32; // Convert to lowercase
     }
+    return NULL;
 }
 
-char getLowerCaseChar() {
-    char c = getchar();
-    if (c == EOF) {
-        Warning("End of file reached");
-        return '\0'; // Return null character on EOF
+error getLowerCaseChar(char *c) {
+    if (c == NULL) {
+        return "Character pointer is NULL";
     }
-    if (c >= 'A' && c <= 'Z') {
-        return c + 32; // Convert to lowercase
+    
+    int32 input = getchar();
+    if (input == EOF) {
+        *c = '\0';  // Set to null character on EOF
+        return NULL;  // Success
     }
-    return c; // Return as is if not uppercase
+    
+    *c = (char)input;
+    
+    if (*c >= 'A' && *c <= 'Z') {
+        *c += 32;  // Convert to lowercase
+    }
+    
+    return NULL;  // Success
 }

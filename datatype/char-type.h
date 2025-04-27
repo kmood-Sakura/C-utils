@@ -5,7 +5,10 @@
 #include "../common/log.h"
 #include "../common/request.h"
 
-void toLowerCase(char* c); // convert char to lower case
-char getLowerCaseChar(); // get char from user and convert to lower case
+#include "string-type.h"
+#include "int-type.h"
+
+error toLowerCase(char* c); // convert char to lower case
+error getLowerCaseChar(char *c); // get char from user and convert to lower case
 
 #endif // CHAR_TYPE_H

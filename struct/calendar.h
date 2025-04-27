@@ -5,22 +5,28 @@
 #include "../datatype/int-type.h"   
 #include "../datatype/string-type.h"
 
-#include "../common/status.h"
-#include "../common/log.h"
-
 typedef struct Task Task;
 typedef struct TaskList TaskList;
 typedef struct Calendar Calendar;
+typedef struct CalendarList CalendarList;
 
-// Creation functions
-Task createTask(const string title, const string location, DateTime setBegin, DateTime setEnd, DateTime dueDate);
-TaskList* createTaskList(Task task, TaskList* next, TaskList* prev);
-Calendar* createCalendar(Date date, TaskList* taskList);
+error allocateCalendarList(CalendarList** calendarList);
+error allocateCalendar(Calendar** calendar);
+error allocateTaskList(TaskList** taskList);
+error allocateTask(Task** task);
 
-// Deallocation functions
-void freeTask(Task* task);
-void freeTaskList(TaskList* head);
-void freeCalendar(Calendar* calendar);
+error createCalendar(Calendar* calendar, Date date, TaskList* tasklist);
+error createCalendarListNode(CalendarList** calendarList, Calendar calendar);
+error addCalendarToList(CalendarList** head, Calendar calendar);
+
+error createTask(Task* task, string title, string location, DateTime setBegin, DateTime setEnd, DateTime dueDate);
+error createTaskListNode(TaskList** taskList, Task task);
+error addTaskToTaskList(TaskList** head, Task task);
+
+void FreeTaskContent(Task* task);
+void FreeTaskList(TaskList* head);
+void FreeCalendarContent(Calendar* calendar);
+void FreeCalendarList(CalendarList* calendarList);
 
 typedef struct Task {
     string title;     // task title
@@ -40,5 +46,11 @@ typedef struct Calendar {
     Date date;               // date
     TaskList* taskList;      // list of tasks
 } Calendar;
+
+typedef struct CalendarList {
+    Calendar calendar; // calendar
+    struct CalendarList* next; // next calendar
+    struct CalendarList* prev; // previous calendar
+} CalendarList;
 
 #endif // CALENDAR_H

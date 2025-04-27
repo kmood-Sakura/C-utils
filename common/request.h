@@ -7,7 +7,7 @@
 #include "../datatype/string-type.h"
 
 code requestConfirm(); // request confirmation from user
-char requestCommand(const string commandKeys); // request command from user
-string requestString(const uint32 maxLength, const string prompt); // request string from user
+code requestCommand(char* command, const string commandKeys);
+code requestString(string* str, const uint32 maxLength, const string prompt);
 
 #endif // REQUEST_H

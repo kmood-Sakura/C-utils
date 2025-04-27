@@ -6,23 +6,16 @@
 #include "../datatype/char-type.h"
 #include "../datatype/date-type.h"
 
-#include "../common/status.h"
-#include "../common/log.h"
-#include "../common/request.h"
-
-#include "leb2.h"
-#include "path.h"
 #include "calendar.h"
 #include "notification.h"
-
-#include "file.h"
+#include "leb2.h"
 
 #define MAX_STUDENT_ID 11+1 // max student ID length
 #define MAX_PASSWORD_LEN 30 // max password length
 
 typedef struct UserData {
-    Notification* notifications; // list of notifications
-    Calendar* calendars; // list of calendars
+    NotificationList* notificationList; // list of notifications
+    CalendarList* calendarList; // list of calendars
     LEB2* leb2; // list of courses
 } UserData;
 
@@ -32,13 +25,15 @@ typedef struct Auth {
     UserData* userData; // user data
 } Auth;
 
-void initAuth(Auth* auth); // initialize auth
-void ResetAuth(Auth* auth); // reset auth
+void initAuth(Auth* auth);
 
-code getAuth(Auth* auth); // get auth from user
-code verifyAuth(const Auth* auth); // verify auth
+error createUserData(UserData** userData, NotificationList* notificationList, CalendarList* calendarList, LEB2* leb2);
+error createAuth(Auth* auth, const string studentId, const string password);
+code isAuthExist(const Auth* auth);
 
-void FreeAuth(Auth* auth); // free auth
-void FreeUserData(UserData* userData); // free user data
+void FreeAuthContent(Auth* auth);
+void FreeAuth(Auth* auth);
+void FreeUserDataContent(UserData* userData);
+void FreeUserData(UserData* userData);
 
 #endif // AUTH_H

@@ -1,9 +1,6 @@
 #ifndef NOTIFICATION_H 
 #define NOTIFICATION_H
 
-#include "../common/status.h"
-#include "../common/log.h"
-
 #include "../datatype/int-type.h"
 #include "../datatype/string-type.h"
 #include "../datatype/date-type.h"
@@ -20,7 +17,14 @@ typedef struct NotificationList {
     struct NotificationList* prev; // previous notification
 } NotificationList;
 
-Notification* createNotification(const string header, const string title, DateTime dueDate);
-void FreeNotification(Notification* notification);
+error allocateNotification(Notification** notification);
+error allocateNotificationList(NotificationList** notificationList);
+
+error createNotification(Notification* notification, const string header, const string title, DateTime dueDate);
+error createNotificationListNode(NotificationList** node, Notification notification);
+error addNotificationToList(NotificationList** head, Notification notification);
+
+void FreeNotificationContent(Notification* notification);
+void FreeNotificationList(NotificationList* notificationList);
 
 #endif // NOTIFICATION_H

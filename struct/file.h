@@ -4,10 +4,31 @@
 #include "../datatype/int-type.h"
 #include "../datatype/string-type.h"
 
-#include "../common/status.h"
-#include "../common/log.h"
-
 #include "path.h"
+
+typedef struct File File;
+typedef struct Folder Folder;
+
+error allocateFile(File** file);
+error allocateFolder(Folder** folder);
+
+error createFile(File* file, const string filename, const string dir, const string fileType);
+error createFileWithPath(File* file, const Path filename, const Path dirPath, const Path fileType);
+error createFolder(Folder* folder, const string folderName, const string dir);
+error createFolderWithPath(Folder* folder, const Path folderName, const Path dirPath);
+
+error MakeFile(const File* filedata);
+error MakeFileByPath(const string filepath);
+error MakeFolder(const Folder* folder);
+error MakeFolderByPath(const string folderPath);
+
+code FileExist(const string filePath);
+code FolderExist(const string folderPath);
+
+void FreeFileContent(File* file);
+void FreeFile(File* file);
+void FreeFolderContent(Folder* folder);
+void FreeFolder(Folder* folder);
 
 typedef struct File {
     Path filename; // file name
@@ -19,16 +40,5 @@ typedef struct Folder {
     Path folderName; // folder name
     Path dirPath; // folder path
 } Folder;
-
-File* initFile();
-File* createFile(const string filename, const string dir, const string fileType);
-File* createFileWithPath(const Path filename, const Path dirPath, const Path fileType);
-code MakeFile(const File* file);
-code MakeFolder(const Folder* folder);
-code MakeFilePath(const string filepath);
-code MakeFolderPath(const string folderPath);
-code FileExist(const string filePath);
-code FolderExist(const string folderPath);
-void FreeFile(File* file);
 
 #endif // FILE_H

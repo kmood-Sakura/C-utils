@@ -4,69 +4,95 @@
 #include <stdlib.h>
 #include <string.h>
 
+// allocated at main page only
+
 void initAuth(Auth* auth) {
     auth->studentId = NULL; // Initialize student ID
     auth->password = NULL; // Initialize password
     auth->userData = NULL; // Initialize user data
 }
 
-code getAuth(Auth* auth) {
-    if (verifyAuth(auth)) {
-        return -1;
+error createAuth(Auth* auth, const string studentId, const string password) {
+    if (auth == NULL) {
+        return "Auth pointer is required"; // Invalid auth pointer
     }
-    auth->studentId = requestString(MAX_STUDENT_ID, "studentId");
-    if(auth->studentId == NULL) {
-        return 0;
+    if (studentId == NULL || password == NULL) {
+        return "Student ID and password are required"; // Invalid parameters
     }
-    auth->password = requestString(MAX_PASSWORD_LEN, "password");
-    if(auth->password == NULL) {
-        auth->studentId = NULL;
-        return 0;
+    error err = NULL;
+    err = allocateString(&auth->studentId, studentId); // Allocate memory for student ID
+    if (err != NULL) {
+        return err; // Memory allocation failed
     }
-    return 1; // Success
+    
+    err = allocateString(&auth->password, password); // Allocate memory for password
+    if (err != NULL) {
+        FreeString(&auth->studentId); // Free student ID
+        return err; // Memory allocation failed
+    }
+    
+    return NULL; // Success
 }
 
-code verifyAuth(const Auth* auth) {
+error createUserData(UserData** userData, NotificationList* notificationList, CalendarList* calendarList, LEB2* leb2) {
+    if (userData == NULL) {
+        return "User data pointer is required"; // Invalid user data pointer
+    }
+
+    *userData = (UserData*)malloc(sizeof(UserData)); // Allocate memory for user data
+    if (*userData == NULL) {
+        return "Memory allocation failed"; // Memory allocation failed
+    }
+
+    (*userData)->notificationList = notificationList; // Set notification list
+    (*userData)->calendarList = calendarList; // Set calendar list
+    (*userData)->leb2 = leb2; // Set LEB2 data
+    
+    return NULL; // Success
+}
+
+code isAuthExist(const Auth* auth) {
     if (auth == NULL) {
         return 0; // Invalid auth
     }
-    if (auth->studentId == NULL || auth->password == NULL) {
+    if (auth->studentId == NULL && auth->password == NULL) {
         return 0; // Invalid student ID or password
     }
     return 1; // Success
 }
 
-void FreeAuth(Auth* auth) {
+void FreeAuthContent(Auth* auth) {
     if (auth == NULL) {
         return; // Invalid auth
     }
     if (auth->studentId != NULL) {
-        freeString(auth->studentId); // Free student ID
+        FreeString(&auth->studentId); // Free student ID
     }
     if (auth->password != NULL) {
-        freeString(auth->password); // Free password
+        FreeString(&auth->password); // Free password
     }
     if (auth->userData != NULL) {
         FreeUserData(auth->userData); // Free user data
     }
+}
+
+void FreeAuth(Auth* auth) {
+    if (auth == NULL)return; // Invalid auth
+    FreeAuthContent(auth); // Free auth content
     free(auth); // Free auth structure
 }
 
-void ResetAuth(Auth* auth) {
-    if (auth == NULL) {
-        return; // Invalid auth
+void FreeUserDataContent(UserData* userData) {
+    if (userData == NULL) return;
+
+    if (userData->notificationList != NULL) {
+        FreeNotificationList(userData->notificationList); // Free notifications
     }
-    if (auth->studentId != NULL) {
-        freeString(auth->studentId); // Free student ID
-        auth->studentId = NULL; // Reset student ID
+    if (userData->calendarList != NULL) {
+        FreeCalendarList(userData->calendarList); // Free calendars
     }
-    if (auth->password != NULL) {
-        freeString(auth->password); // Free password
-        auth->password = NULL; // Reset password
-    }
-    if (auth->userData != NULL) {
-        FreeUserData(auth->userData); // Free user data
-        auth->userData = NULL; // Reset user data
+    if (userData->leb2 != NULL) {
+        FreeLEB2(userData->leb2); // Free LEB2 data
     }
 }
 
@@ -74,14 +100,6 @@ void FreeUserData(UserData* userData) {
     if (userData == NULL) {
         return; // Invalid user data
     }
-    if (userData->notifications != NULL) {
-        FreeNotification(userData->notifications); // Free notifications
-    }
-    if (userData->calendars != NULL) {
-        FreeCalendar(userData->calendars); // Free calendars
-    }
-    if (userData->leb2 != NULL) {
-        FreeLEB2(userData->leb2); // Free LEB2 data
-    }
+    FreeUserDataContent(userData); // Free user data content
     free(userData); // Free user data structure
 }

@@ -1,21 +1,21 @@
 #ifndef DATE_TYPE_H
 #define DATE_TYPE_H
 
+#include "../common/status.h"
+
+#include "string-type.h"
 #include "int-type.h"
 #include <time.h>
 
-typedef time_t DateTime; // time_t is typically a 64-bit integer representing seconds since the epoch (1970-01-01 00:00:00 UTC)
+/**
+ * Custom date and time types and functions for time manipulation
+ */
 
-typedef struct DateTimeInfo {
-    uint16 year;  // 1900-2100
-    uint8 month; // 1-12
-    uint8 day;   // 1-31
-    uint8 hour;  // 0-23
-    uint8 minute;// 0-59
-    uint8 second;// 0-59
-    uint8 utc; // UTC offset in hours
-} DateTimeInfo;
+/* Type definitions */
+typedef uint64 TimeValue;
+typedef time_t DateTime;
 
+/* Structs */
 typedef struct Date {
     uint8 day;   // 1-31
     uint8 month; // 1-12
@@ -27,9 +27,7 @@ typedef struct Clock {
     uint8 minute;// 0-59
     uint8 second;// 0-59
 } Clock;
-// time : "YYYYMMDDHHMMSSmmm"
 
-// for handle struct tm
 typedef struct Time {
     uint16 year;  // 1900-2100
     uint8 month; // 1-12
@@ -40,9 +38,24 @@ typedef struct Time {
     uint16 millisecond; // 0-999
 } Time;
 
-typedef uint64 TimeValue; // YYYYMMDDHHMMSSmmm
+typedef struct DateTimeInfo {
+    uint16 year;  // 1900-2100
+    uint8 month; // 1-12
+    uint8 day;   // 1-31
+    uint8 hour;  // 0-23
+    uint8 minute;// 0-59
+    uint8 second;// 0-59
+    uint8 utc; // UTC offset in hours
+} DateTimeInfo;
 
-/* Format Definitions - Modified to use proper format specifiers for each type */
+/* Format strings */
+#define DATE_FORMAT "%04hu-%02hhu-%02hhu" // YYYY-MM-DD
+#define CLOCK_FORMAT "%02hhu:%02hhu:%02hhu" // HH:MM:SS
+#define TIME_FORMAT "%04hu-%02hhu-%02hhu %02hhu:%02hhu:%02hhu.%03hu" // YYYY-MM-DD HH:MM:SS.mmm
+#define DATETIME_FORMAT "%04hu-%02hhu-%02hhu %02hhu:%02hhu:%02hhu UTC+%hhu" // YYYY-MM-DD HH:MM:SS UTC+X
+#define TIMEVALUE_FORMAT "%04hu%02hhu%02hhu%02hhu%02hhu%02hhu%03hu" // YYYYMMDDHHMMSSmmm
+
+/* Log format strings */
 #define DATE_LOG_FORMAT "%04hu-%02hhu-%02hhu\n"
 #define CLOCK_LOG_FORMAT "%02hhu:%02hhu:%02hhu\n"
 #define TIME_LOG_FORMAT "%u-%u-%u %u:%u:%u.%u\n"
@@ -50,17 +63,17 @@ typedef uint64 TimeValue; // YYYYMMDDHHMMSSmmm
 #define TIMEVALUE_LOG_FORMAT "%u%u%u%u%u%u%u\n" // YYYYMMDDHHMMSSmmm
 #define KID_TIME_LOG_FORMAT "Year: %u, Month: %u, Day: %u, Hour: %u, Minute: %u, Second: %u\n"
 
-#define DATE_FORMAT "%04hu-%02hhu-%02hhu" // YYYY-MM-DD
-#define CLOCK_FORMAT "%02hhu:%02hhu:%02hhu" // HH:MM:SS
-#define TIME_FORMAT "%04hu-%02hhu-%02hhu %02hhu:%02hhu:%02hhu.%03hu" // YYYY-MM-DD HH:MM:SS.mmm
-#define DATETIME_FORMAT "%04hu-%02hhu-%02hhu %02hhu:%02hhu:%02hhu UTC+%hhu" // YYYY-MM-DD HH:MM:SS UTC+X
-#define TIMEVALUE_FORMAT "%04hu%02hhu%02hhu%02hhu%02hhu%02hhu%03hu" // YYYYMMDDHHMMSSmmm
+/**
+ * Get the current date and time
+ * 
+ * @param dateTime Pointer to store the result
+ * @return NULL on success, error message on failure
+ */
+error getCurrentDateTime(DateTime* dateTime);
 
-/* Function Declarations */
-
-/*
-* Log Functions
-*/
+/**
+ * Log Functions
+ */
 void logDate(const Date* date);
 void logClock(const Clock* clock);
 void logTime(const Time* time);
@@ -68,76 +81,120 @@ void logDateTimeInfo(const DateTimeInfo* info);
 void logTimeValue(TimeValue value);
 void logDateTime(DateTime dateTime);
 
-/*
-* DateTime Retrieval Functions
-*/
-DateTime getCurrentDateTime(void);
-DateTime getDateTimeFromComponents(uint16 year, uint8 month, uint8 day,
-                                uint8 hour, uint8 minute, uint8 second);
-
-/*
-* Data Type Conversion Functions
-*/
-Date* dateTimeToDate(DateTime dt);
-Clock* dateTimeToClock(DateTime dt);
-Time* dateTimeToTime(DateTime dt);
-DateTimeInfo* dateTimeToDateTimeInfo(DateTime dt);
-
-/*
-* Memory Management Functions
-*/
+/**
+ * Memory Management Functions
+ */
 void freeDate(Date* date);
 void freeClock(Clock* clock);
 void freeTime(Time* time);
 void freeDateTimeInfo(DateTimeInfo* info);
 
-/*
-* Time Functions
-*/
-Time* createTime(uint16 year, uint8 month, uint8 day,
-                uint8 hour, uint8 minute, uint8 second, uint16 millisecond);
-Time* getCurrentTime(void);
-Time* copyTime(const Time* time);
+/**
+ * Convert a Date structure to a string
+ * 
+ * @param str Pointer to char pointer (should be NULL)
+ * @param date Date structure to convert
+ * @return NULL on success, error message on failure
+ */
+error dateToString(string* str, const Date* date);
 
-/*
-* Date Functions
-*/
-Date* createDate(uint8 day, uint8 month, uint16 year);
-Date* getCurrentDate(void);
-Date* copyDate(const Date* date);
+/**
+ * Convert a Clock structure to a string
+ * 
+ * @param str Pointer to char pointer (should be NULL)
+ * @param clock Clock structure to convert
+ * @return NULL on success, error message on failure
+ */
+error clockToString(string* str, const Clock* clock);
 
-/*
-* Clock Functions
-*/
-Clock* createClock(uint8 hour, uint8 minute, uint8 second);
-Clock* getCurrentClock(void);
-Clock* copyClock(const Clock* clock);
+/**
+ * Convert a Time structure to a string
+ * 
+ * @param str Pointer to char pointer (should be NULL)
+ * @param time Time structure to convert
+ * @return NULL on success, error message on failure
+ */
+error timeToString(string* str, const Time* time);
 
-/*
-* DateTimeInfo Functions
-*/
-DateTimeInfo* createDateTimeInfo(uint16 year, uint8 month, uint8 day,
-                                uint8 hour, uint8 minute, uint8 second, uint8 utc);
-DateTimeInfo* getCurrentDateTimeInfo(void);
-DateTimeInfo* copyDateTimeInfo(const DateTimeInfo* info);
+/**
+ * Convert a DateTimeInfo structure to a string
+ * 
+ * @param str Pointer to char pointer (should be NULL)
+ * @param info DateTimeInfo structure to convert
+ * @return NULL on success, error message on failure
+ */
+error dateTimeInfoToString(string* str, const DateTimeInfo* info);
 
-/*
-* TimeValue Functions
-*/
-TimeValue createTimeValue(uint16 year, uint8 month, uint8 day,
-                        uint8 hour, uint8 minute, uint8 second, uint16 millisecond);
-TimeValue getCurrentTimeValue(void);
-TimeValue timeToTimeValue(const Time* time);
-Time* timeValueToTime(TimeValue value);
+/**
+ * Convert a TimeValue to a string
+ * 
+ * @param str Pointer to char pointer (should be NULL)
+ * @param value TimeValue to convert
+ * @return NULL on success, error message on failure
+ */
+error timeValueToString(string* str, TimeValue value);
 
-/*
-* String Conversion Functions
-*/
-char* dateToString(const Date* date);
-char* clockToString(const Clock* clock);
-char* timeToString(const Time* time);
-char* dateTimeInfoToString(const DateTimeInfo* info);
-char* timeValueToString(TimeValue value);
-char* dateTimeToString(DateTime dt);
+/**
+ * Convert a DateTime to a string
+ * 
+ * @param str Pointer to char pointer (should be NULL)
+ * @param dt DateTime to convert
+ * @return NULL on success, error message on failure
+ */
+error dateTimeToString(string* str, DateTime dt);
+
+/**
+ * Convert a string to a Date structure
+ * 
+ * @param date Pointer to Date pointer (should be NULL)
+ * @param str String to convert (format: YYYY-MM-DD)
+ * @return NULL on success, error message on failure
+ */
+error stringToDate(Date** date, const string str);
+
+/**
+ * Convert a string to a Clock structure
+ * 
+ * @param clock Pointer to Clock pointer (should be NULL)
+ * @param str String to convert (format: HH:MM:SS)
+ * @return NULL on success, error message on failure
+ */
+error stringToClock(Clock** clock, const string str);
+
+/**
+ * Convert a string to a Time structure
+ * 
+ * @param time Pointer to Time pointer (should be NULL)
+ * @param str String to convert (format: YYYY-MM-DD HH:MM:SS.mmm)
+ * @return NULL on success, error message on failure
+ */
+error stringToTime(Time** time, const string str);
+
+/**
+ * Convert a string to a DateTimeInfo structure
+ * 
+ * @param info Pointer to DateTimeInfo pointer (should be NULL)
+ * @param str String to convert (format: YYYY-MM-DD HH:MM:SS UTC+X)
+ * @return NULL on success, error message on failure
+ */
+error stringToDateTimeInfo(DateTimeInfo** info, const string str);
+
+/**
+ * Convert a string to a TimeValue
+ * 
+ * @param value Pointer to TimeValue to store the result
+ * @param str String to convert (format: YYYYMMDDHHMMSSmmm)
+ * @return NULL on success, error message on failure
+ */
+error stringToTimeValue(TimeValue* value, const string str);
+
+/**
+ * Convert a string to a DateTime
+ * 
+ * @param dt Pointer to DateTime to store the result
+ * @param str String to convert (format: YYYY-MM-DD HH:MM:SS)
+ * @return NULL on success, error message on failure
+ */
+error stringToDateTime(DateTime* dt, const string str);
 
 #endif // DATE_TYPE_H
