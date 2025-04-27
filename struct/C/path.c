@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 error getCurrentPath(Path* pathObj) {
     if (pathObj == NULL) {
@@ -193,7 +194,7 @@ error createFolderPath(Path* folderPath, const string folderName, const Path dir
         return err; // Memory allocation failed
     }
     FreePathContent(&tempPath); // Free temporary path content
-    
+
     return NULL; // Success
 }
 
