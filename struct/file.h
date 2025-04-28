@@ -25,6 +25,10 @@ error MakeFolderByPath(const string folderPath);
 code FileExist(const string filePath);
 code FolderExist(const string folderPath);
 
+error readFileToTextLinesString(textline** head, const string filepath);
+error readFileToTextLinesPath(textline** head, const Path filepath);
+
+void FreeTextLine(textline* head);
 void FreeFileContent(File* file);
 void FreeFile(File* file);
 void FreeFolderContent(Folder* folder);

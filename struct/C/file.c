@@ -211,6 +211,190 @@ code FolderExist(const string folderPath) {
     return 1; // Folder exists
 }
 
+error readFileToTextLinesString(textline** head, const string filepath) {
+    if (head == NULL) {
+        return "Invalid head pointer";
+    }
+    
+    if (filepath == NULL) {
+        return "Invalid file path";
+    }
+    
+    // Initialize head to NULL
+    *head = NULL;
+    
+    // Open the file
+    FILE* file = fopen(filepath, "r");
+    if (file == NULL) {
+        return "Failed to open file";
+    }
+    
+    textline* lastLine = NULL;
+    char buffer[1024];  // Buffer for reading lines
+    
+    // Read file line by line
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        // Create new textline node
+        textline* newLine = (textline*)malloc(sizeof(textline));
+        if (newLine == NULL) {
+            fclose(file);
+            
+            // Clean up already allocated lines
+            textline* current = *head;
+            while (current != NULL) {
+                textline* next = current->nextline;
+                FreeString(&current->line);
+                free(current);
+                current = next;
+            }
+            
+            return "Memory allocation failed";
+        }
+        
+        // Remove newline character if present
+        uint32 len = stringLen(buffer);
+        if (len > 0 && buffer[len-1] == '\n') {
+            buffer[len-1] = '\0';
+        }
+        
+        // Allocate and copy line content
+        error err = createString(&newLine->line, buffer);
+        if (err != NULL) {
+            free(newLine);
+            fclose(file);
+            
+            // Clean up already allocated lines
+            textline* current = *head;
+            while (current != NULL) {
+                textline* next = current->nextline;
+                FreeString(&current->line);
+                free(current);
+                current = next;
+            }
+            
+            return err;
+        }
+        
+        newLine->nextline = NULL;
+        
+        // Add to linked list
+        if (*head == NULL) {
+            *head = newLine;  // First node
+        } else {
+            lastLine->nextline = newLine;  // Add to end
+        }
+        
+        lastLine = newLine;
+    }
+    
+    fclose(file);
+    
+    // Check if file was empty
+    if (*head == NULL) {
+        return "File is empty";
+    }
+    
+    return NULL;  // Success
+}
+
+error readFileToTextLinesPath(textline** head, const Path filepath) {
+    if (head == NULL) {
+        return "Invalid head pointer";
+    }
+    
+    if (filepath.path == NULL) {
+        return "Invalid file path";
+    }
+    
+    // Initialize head to NULL
+    *head = NULL;
+    
+    // Open the file
+    FILE* file = fopen(filepath.path, "r");
+    if (file == NULL) {
+        return "Failed to open file";
+    }
+    
+    textline* lastLine = NULL;
+    char buffer[1024];  // Buffer for reading lines
+    
+    // Read file line by line
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        // Create new textline node
+        textline* newLine = (textline*)malloc(sizeof(textline));
+        if (newLine == NULL) {
+            fclose(file);
+            
+            // Clean up already allocated lines
+            textline* current = *head;
+            while (current != NULL) {
+                textline* next = current->nextline;
+                FreeString(&current->line);
+                free(current);
+                current = next;
+            }
+            
+            return "Memory allocation failed";
+        }
+        
+        // Remove newline character if present
+        uint32 len = stringLen(buffer);
+        if (len > 0 && buffer[len-1] == '\n') {
+            buffer[len-1] = '\0';
+        }
+        
+        // Allocate and copy line content
+        error err = createString(&newLine->line, buffer);
+        if (err != NULL) {
+            free(newLine);
+            fclose(file);
+            
+            // Clean up already allocated lines
+            textline* current = *head;
+            while (current != NULL) {
+                textline* next = current->nextline;
+                FreeString(&current->line);
+                free(current);
+                current = next;
+            }
+            
+            return err;
+        }
+        
+        newLine->nextline = NULL;
+        
+        // Add to linked list
+        if (*head == NULL) {
+            *head = newLine;  // First node
+        } else {
+            lastLine->nextline = newLine;  // Add to end
+        }
+        
+        lastLine = newLine;
+    }
+    
+    fclose(file);
+    
+    // Check if file was empty
+    if (*head == NULL) {
+        return "File is empty";
+    }
+    
+    return NULL;  // Success
+}
+
+void FreeTextLine(textline* head) {
+    if (head == NULL) return;
+    
+    textline* current = head;
+    while (current != NULL) {
+        textline* next = current->nextline;
+        FreeString(&current->line);
+        free(current);
+        current = next;
+    }
+}
+
 void FreeFileContent(File* file) {
     if (file == NULL) return;
 
