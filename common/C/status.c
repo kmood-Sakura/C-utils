@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void initStatus(Status* status) {
+    status->code = 0; // Initialize code to 0
+    status->msg = NULL; // Initialize message to NULL
+    status->details = NULL; // Initialize details to NULL
+}
+
 error allocateStatus(Status** status) {
     if (status == NULL) {
         return "Status pointer is NULL"; // Invalid status pointer

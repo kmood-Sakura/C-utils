@@ -12,6 +12,7 @@ typedef struct Status {
     string details; // detail message
 } Status;
 
+void initStatus(Status* status); // initialize status
 error allocateStatus(Status** status); // allocate status
 error createStatus(Status* status, const uint8 code, const string msg, const string details); // create status
 

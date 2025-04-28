@@ -13,6 +13,8 @@ typedef struct Path {
     uint32 length;
 } Path; // Path is a string
 
+error getCurrentPath(Path* pathObj);
+void initPath(Path* pathTC);
 error createPath(Path* pathTC,const string path);
 error createPathLen(Path* pathTC, const string path, const uint32 length);
 error mergeTwoPaths(Path* pathTC,const Path path1, const Path path2);
@@ -25,4 +27,4 @@ error createDirPath(Path* folderPath, const Path folderName, const Path dirPath)
 void FreePathContent(Path* path);
 void FreePath(Path* path);
 
-#endif // PATH_H
+#endif

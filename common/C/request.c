@@ -57,19 +57,34 @@ code requestString(string* str, const uint32 maxLength, const string prompt) {
     }
 
     printf("%s : ", prompt);
-    fgets(*str, maxLength + 1, stdin); // Read string from user
-    uint32 len = stringLen(*str);
+    
+    string input = (string)malloc((maxLength + 1) * sizeof(char)); // Allocate memory for input string
+    if (input == NULL) {
+        return 0; // Memory allocation failed
+    }
+    
+    // Clear the input buffer
+    fgets(input, maxLength + 1, stdin);
+    
+    uint32 len = strlen(input);
     if (len == 0) {
+        free(input);
         return -1; // Empty string
     }
-    if (*str[len - 1] == '\n') {
-        *str[len - 1] = '\0'; // Remove newline character
-    }else{
-        *str[len] = '\0'; // Ensure null termination
+    
+    // Remove newline character if present
+    if (input[len - 1] == '\n') {
+        input[len - 1] = '\0';
+        len--;
     }
-    if (len > maxLength) {
-        *str[maxLength] = '\0'; // Ensure null termination
+    
+    // Check if string is now empty
+    if (len == 0) {
+        free(input);
+        return -1; // Empty string
     }
-
+    
+    *str = input; // Assign input to str
+    
     return 1; // Success
 }

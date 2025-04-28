@@ -247,8 +247,8 @@ error createString(string* result, const string source) {
 }
 
 void FreeString(string *str) {
-    if (str != NULL && *str != NULL) {
-        free(*str); // Free the string memory
-        *str = NULL; // Reset the pointer to NULL
-    }
+    if (str == NULL) return;
+    if (*str == NULL) return; // Invalid string pointer
+    free(*str); // Free the string memory
+    *str = NULL; // Reset the pointer to NULL
 }

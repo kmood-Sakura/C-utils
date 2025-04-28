@@ -10,9 +10,7 @@ error getCurrentPath(Path* pathObj) {
         return "Path pointer is NULL";
     }
     
-    // Initialize path to NULL in case we return early
-    pathObj->path = NULL;
-    pathObj->length = 0;
+    initPath(pathObj); // Initialize path object
     
     // Initial buffer size
     size_t bufferSize = 256;
@@ -50,23 +48,51 @@ error getCurrentPath(Path* pathObj) {
             return "Path is unreasonably long";
         }
     }
-    uint32 length = strlen(buffer);
+    uint32 length = stringLen(buffer);
     if (length == 0) {
         free(buffer);
         return "Path is empty";
     }
     // Create string for path
-    error err = allocateStringLen(&pathObj->path, buffer, length);
+    Path bufferPath;
+    initPath(&bufferPath); // Initialize buffer path
+    error err = allocateStringLen(&bufferPath.path, buffer, length);
     if (err != NULL) {
         free(buffer);
+        FreePathContent(&bufferPath); // Free buffer path content
         return err; // Memory allocation failed
     }
-    pathObj->length = length;
+    bufferPath.length = length;
 
-    // Free the temporary buffer
+    Path tempPath;
+    initPath(&tempPath); // Initialize temporary path
+    err = createPathLen(&tempPath, "/",1);
+    if (err != NULL) {
+        free(buffer);
+        FreePathContent(&tempPath); // Free temporary path content
+        FreePathContent(&bufferPath); // Free buffer path content
+        return err; // Memory allocation failed
+    }
+
+    err = mergeTwoPaths(pathObj, bufferPath, tempPath); // Merge paths
+    if (err != NULL) {
+        free(buffer);
+        FreePathContent(&tempPath); // Free temporary path content
+        FreePathContent(&bufferPath); // Free buffer path content
+        return err; // Memory allocation failed
+    }
+    pathObj->length = bufferPath.length + tempPath.length; // Update length
+
     free(buffer);
+    FreePathContent(&tempPath); // Free temporary path content
+    FreePathContent(&bufferPath); // Free buffer path content
     
     return NULL; // Success
+}
+
+void initPath(Path* pathTC) {
+    pathTC->path = NULL; // Initialize path to NULL
+    pathTC->length = 0; // Initialize length to 0
 }
 
 error createPath(Path* pathTC,const string path) {
@@ -184,6 +210,8 @@ error createFolderPath(Path* folderPath, const string folderName, const Path dir
     }
     error err = NULL;
     Path tempPath;
+    initPath(&tempPath); // Initialize temporary path
+    
     err = createPath(&tempPath, folderName); // Copy folder name
     if (err != NULL) {
         return err; // Memory allocation failed
@@ -207,6 +235,8 @@ error createFolderPathLen(Path* folderPath, const string folderName, const Path 
     }
     error err = NULL;
     Path tempPath;
+    initPath(&tempPath); // Initialize temporary path
+    
     err = createPathLen(&tempPath, folderName, length); // Copy folder name
     if (err != NULL) {
         return err; // Memory allocation failed
