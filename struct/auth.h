@@ -13,17 +13,8 @@
 #define MAX_STUDENT_ID 11+1 // max student ID length
 #define MAX_PASSWORD_LEN 30 // max password length
 
-typedef struct UserData {
-    NotificationList* notificationList; // list of notifications
-    CalendarList* calendarList; // list of calendars
-    LEB2* leb2; // list of courses
-} UserData;
-
-typedef struct Auth {
-    string studentId; // student ID
-    string password; // password
-    UserData* userData; // user data
-} Auth;
+typedef struct UserData UserData;
+typedef struct Auth Auth;
 
 void initAuth(Auth* auth);
 
@@ -35,5 +26,17 @@ void FreeAuthContent(Auth* auth);
 void FreeAuth(Auth* auth);
 void FreeUserDataContent(UserData* userData);
 void FreeUserData(UserData* userData);
+
+typedef struct UserData {
+    NotificationList* notificationList; // list of notifications
+    CalendarList* calendarList; // list of calendars
+    LEB2* leb2; // list of courses
+} UserData;
+
+typedef struct Auth {
+    string studentId; // student ID
+    string password; // password
+    UserData* userData; // user data
+} Auth;
 
 #endif // AUTH_H

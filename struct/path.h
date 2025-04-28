@@ -8,10 +8,7 @@
 #include "../common/log.h"
 #include "../common/request.h"
 
-typedef struct Path {
-    string path;
-    uint32 length;
-} Path; // Path is a string
+typedef struct Path Path; // Forward declaration of Path struct
 
 error getCurrentPath(Path* pathObj);
 void initPath(Path* pathTC);
@@ -26,5 +23,10 @@ error createDirPath(Path* folderPath, const Path folderName, const Path dirPath)
 
 void FreePathContent(Path* path);
 void FreePath(Path* path);
+
+typedef struct Path {
+    string path;
+    uint32 length;
+} Path; // Path is a string
 
 #endif
