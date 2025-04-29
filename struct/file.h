@@ -6,6 +6,15 @@
 
 #include "path.h"
 
+/* Platform detection */
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+    #define OS_WINDOWS
+#elif defined(__APPLE__) || defined(__MACH__) || defined(__linux__) || defined(__unix) || defined(__unix__)
+    #define OS_UNIX_LIKE
+#else
+    #error "Unsupported platform"
+#endif
+
 typedef struct File File;
 typedef struct Folder Folder;
 

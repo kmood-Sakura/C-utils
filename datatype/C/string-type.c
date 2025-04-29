@@ -246,6 +246,25 @@ error createString(string* result, const string source) {
     return NULL; // Success
 }
 
+error createStringLen(string* result, const string source, const uint32 length) {
+    if (result == NULL) {
+        return "required result pointer"; // Invalid result pointer
+    }
+    
+    if (*result == NULL) {
+        return "string not located yet"; // String already allocated
+    }
+
+    if (length == 0 || source == NULL) {
+        return "source string required"; // No source string
+    }
+
+    strncpy(*result, source, length); // Copy up to length characters
+    (*result)[length] = '\0'; // Null-terminate the string
+
+    return NULL; // Success
+}
+
 void FreeString(string *str) {
     if (str == NULL) return;
     if (*str == NULL) return; // Invalid string pointer

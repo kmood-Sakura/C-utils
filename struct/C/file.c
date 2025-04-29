@@ -3,9 +3,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+/* Platform-specific includes */
+#ifdef OS_WINDOWS
+    #include <windows.h>
+    #include <direct.h>
+    #define mkdir(path, mode) _mkdir(path)
+#else
+    #include <dirent.h>
+    #include <unistd.h>
+    /* Default permission: read/write/execute for owner, read/execute for group and others */
+    #define DEFAULT_MODE 0755
+    #define mkdir(path) mkdir(path, DEFAULT_MODE)
+#endif
 
 error allocateFile(File** file) {
     if (file != NULL) {
@@ -178,9 +190,15 @@ error MakeFolderByPath(const string folderPath) {
         return NULL; // Folder already exists
     }
     
-    if (mkdir(folderPath) == -1) {
+#ifdef OS_WINDOWS
+    if (_mkdir(folderPath) == -1) {
         return "Failed to create folder"; // Folder creation failed
     }
+#else
+    if (mkdir(folderPath, DEFAULT_MODE) == -1) {
+        return "Failed to create folder"; // Folder creation failed
+    }
+#endif
     
     return NULL; // Folder created successfully
 }
@@ -195,6 +213,7 @@ code FileExist(const string filePath) {
     if (file == NULL) {
         return 0;
     }
+    fclose(file);
     return 1;
 }
 
@@ -204,13 +223,18 @@ code FolderExist(const string folderPath) {
         return 0; // Invalid folder path
     }
 
+#ifdef OS_WINDOWS
+    DWORD dwAttrib = GetFileAttributesA(folderPath);
+    return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
+           (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+#else
     DIR* dir = opendir(folderPath);
     if (dir == NULL) {
         return 0; // Folder does not exist
     }
-
     closedir(dir);
     return 1; // Folder exists
+#endif
 }
 
 error readFileToTextLinesString(textline** head, const string filepath) {
@@ -240,15 +264,7 @@ error readFileToTextLinesString(textline** head, const string filepath) {
         textline* newLine = (textline*)malloc(sizeof(textline));
         if (newLine == NULL) {
             fclose(file);
-            
-            // Clean up already allocated lines
-            textline* current = *head;
-            while (current != NULL) {
-                textline* next = current->nextline;
-                FreeString(&current->line);
-                free(current);
-                current = next;
-            }
+            FreeTextLine(*head); // Clean up already allocated lines
             
             return "Memory allocation failed";
         }
@@ -260,19 +276,11 @@ error readFileToTextLinesString(textline** head, const string filepath) {
         }
         
         // Allocate and copy line content
-        error err = createString(&newLine->line, buffer);
+        error err = allocateString(&newLine->line, buffer);
         if (err != NULL) {
             free(newLine);
             fclose(file);
-            
-            // Clean up already allocated lines
-            textline* current = *head;
-            while (current != NULL) {
-                textline* next = current->nextline;
-                FreeString(&current->line);
-                free(current);
-                current = next;
-            }
+            FreeTextLine(*head); // Clean up already allocated lines
             
             return err;
         }
@@ -326,15 +334,7 @@ error readFileToTextLinesPath(textline** head, const Path filepath) {
         textline* newLine = (textline*)malloc(sizeof(textline));
         if (newLine == NULL) {
             fclose(file);
-            
-            // Clean up already allocated lines
-            textline* current = *head;
-            while (current != NULL) {
-                textline* next = current->nextline;
-                FreeString(&current->line);
-                free(current);
-                current = next;
-            }
+            FreeTextLine(*head); // Clean up already allocated lines
             
             return "Memory allocation failed";
         }
@@ -346,19 +346,11 @@ error readFileToTextLinesPath(textline** head, const Path filepath) {
         }
         
         // Allocate and copy line content
-        error err = createString(&newLine->line, buffer);
+        error err = allocateString(&newLine->line, buffer);
         if (err != NULL) {
             free(newLine);
             fclose(file);
-            
-            // Clean up already allocated lines
-            textline* current = *head;
-            while (current != NULL) {
-                textline* next = current->nextline;
-                FreeString(&current->line);
-                free(current);
-                current = next;
-            }
+            FreeTextLine(*head); // Clean up already allocated lines
             
             return err;
         }
