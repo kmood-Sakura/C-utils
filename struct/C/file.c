@@ -176,7 +176,7 @@ error MakeFolderByPath(const string folderPath) {
         return NULL; // Folder already exists
     }
     
-    if (mkdir(folderPath) == -1) {
+    if (MKDIR(folderPath) == -1) {
         return "Failed to create folder"; // Folder creation failed
     }
     
