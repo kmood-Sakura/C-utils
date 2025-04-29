@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 error allocateFile(File** file) {
     if (file != NULL) {
@@ -176,7 +178,7 @@ error MakeFolderByPath(const string folderPath) {
         return NULL; // Folder already exists
     }
     
-    if (MKDIR(folderPath) == -1) {
+    if (mkdir(folderPath) == -1) {
         return "Failed to create folder"; // Folder creation failed
     }
     

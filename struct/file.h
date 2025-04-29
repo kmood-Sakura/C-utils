@@ -6,20 +6,6 @@
 
 #include "path.h"
 
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <direct.h>
-#ifdef _WIN32
-    // #include <direct.h>
-    // Windows mkdir() only takes one argument
-    #define MKDIR(dir) _mkdir(dir)
-#else
-    // #include <sys/stat.h>
-    // #include <sys/types.h>
-    // Mac/Unix mkdir() takes two arguments (path and permissions)
-    #define MKDIR(dir) mkdir(dir, 0755)
-#endif
-
 typedef struct File File;
 typedef struct Folder Folder;
 
