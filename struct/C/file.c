@@ -195,7 +195,7 @@ error MakeFolderByPath(const string folderPath) {
             return "Failed to create folder"; // Folder creation failed
         }
     #else
-        if (mkdir(folderPath, DEFAULT_MODE) == -1) {
+        if (mkdir(folderPath) == -1) {
             return "Failed to create folder"; // Folder creation failed
         }
     #endif
