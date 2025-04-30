@@ -10,6 +10,7 @@ void initAuth(Auth* auth) {
     auth->studentId = NULL; // Initialize student ID
     auth->password = NULL; // Initialize password
     auth->userData = NULL; // Initialize user data
+    auth->dataPath = NULL; // Initialize data path
 }
 
 error createAuth(Auth* auth, const string studentId, const string password) {
@@ -73,6 +74,9 @@ void FreeAuthContent(Auth* auth) {
     }
     if (auth->userData != NULL) {
         FreeUserData(auth->userData); // Free user data
+    }
+    if (auth->dataPath != NULL) {
+        FreeDataPath(auth->dataPath); // Free data path
     }
 }
 

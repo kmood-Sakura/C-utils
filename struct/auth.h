@@ -9,6 +9,7 @@
 #include "calendar.h"
 #include "notification.h"
 #include "leb2.h"
+#include "path.h"
 
 #define MAX_STUDENT_ID 11+1 // max student ID length
 #define MAX_PASSWORD_LEN 30 // max password length
@@ -37,6 +38,7 @@ typedef struct Auth {
     string studentId; // student ID
     string password; // password
     UserData* userData; // user data
+    DataPath* dataPath; // data path
 } Auth;
 
 #endif // AUTH_H

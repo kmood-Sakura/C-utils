@@ -9,8 +9,8 @@
 #include "../common/request.h"
 
 typedef struct Path Path; // Forward declaration of Path struct
+typedef struct DataPath DataPath; // Forward declaration of DataPath struct
 
-error getCurrentPath(Path* pathObj);
 void initPath(Path* pathTC);
 error createPath(Path* pathTC,const string path);
 error createPathLen(Path* pathTC, const string path, const uint32 length);
@@ -21,12 +21,34 @@ error createFolderPath(Path* folderPath, const string folderName, const Path dir
 error createFolderPathLen(Path* folderPath, const string folderName, const Path dirPath, const uint32 length);
 error createDirPath(Path* folderPath, const Path folderName, const Path dirPath);
 
+void initDataPath(DataPath* dataPath);
+error allocateDataPath(DataPath** dataPath);
+error createDataPath(DataPath* dataPath, const Path path, const Path filename);
+error addChildDataPath(DataPath* parent, DataPath* child);
+error findDataPathByFilename(const DataPath* parent, const Path filename, DataPath** result);
+error removeChildDataPath(DataPath* parent, const Path filename);
+
+void FreeDataPath(DataPath* dataPath);
+void FreeDataPathContent(DataPath* dataPath);
+typedef void (*DataPathAction)(DataPath* node, void* userData);
+void traverseDataPath(DataPath* dataPath, DataPathAction action, void* userData);
+
 void FreePathContent(Path* path);
 void FreePath(Path* path);
+
+error getCurrentPath(Path* pathObj);
 
 typedef struct Path {
     string path;
     uint32 length;
 } Path; // Path is a string
+
+typedef struct DataPath {
+    Path path; // path to the data
+    Path filename;
+    DataPath* parent;
+    DataPath** Dir;
+    uint16 sizeDir;
+} DataPath;
 
 #endif

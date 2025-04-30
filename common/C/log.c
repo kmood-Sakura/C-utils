@@ -114,6 +114,9 @@ code LogFatal(const Status* status) {
         case 0:
             LogMsg("Status Failed");
             Error(status->msg);
+            if (status->details != NULL) {
+                Details(status->details);
+            }
             return 0;
         case 1:
             // return Success(status->msg);
@@ -121,6 +124,9 @@ code LogFatal(const Status* status) {
         case -1:
             LogMsg("Status Warning");
             Warning(status->msg);
+            if (status->details != NULL) {
+                Details(status->details);
+            }
             return -1;
         default:
             Error("Unknown status code");

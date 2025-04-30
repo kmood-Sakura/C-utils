@@ -190,15 +190,15 @@ error MakeFolderByPath(const string folderPath) {
         return NULL; // Folder already exists
     }
     
-#ifdef OS_WINDOWS
-    if (_mkdir(folderPath) == -1) {
-        return "Failed to create folder"; // Folder creation failed
-    }
-#else
-    if (mkdir(folderPath, DEFAULT_MODE) == -1) {
-        return "Failed to create folder"; // Folder creation failed
-    }
-#endif
+    #ifdef OS_WINDOWS
+        if (_mkdir(folderPath) == -1) {
+            return "Failed to create folder"; // Folder creation failed
+        }
+    #else
+        if (mkdir(folderPath, DEFAULT_MODE) == -1) {
+            return "Failed to create folder"; // Folder creation failed
+        }
+    #endif
     
     return NULL; // Folder created successfully
 }
@@ -222,19 +222,18 @@ code FolderExist(const string folderPath) {
         Error("folderPath is NULL");
         return 0; // Invalid folder path
     }
-
-#ifdef OS_WINDOWS
-    DWORD dwAttrib = GetFileAttributesA(folderPath);
-    return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
-           (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
-#else
-    DIR* dir = opendir(folderPath);
-    if (dir == NULL) {
-        return 0; // Folder does not exist
-    }
-    closedir(dir);
-    return 1; // Folder exists
-#endif
+    #ifdef OS_WINDOWS
+        DWORD dwAttrib = GetFileAttributesA(folderPath);
+        return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
+            (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+    #else
+        DIR* dir = opendir(folderPath);
+        if (dir == NULL) {
+            return 0; // Folder does not exist
+        }
+        closedir(dir);
+        return 1; // Folder exists
+    #endif
 }
 
 error readFileToTextLinesString(textline** head, const string filepath) {

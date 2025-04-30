@@ -9,6 +9,14 @@ void initStatus(Status* status) {
     status->details = NULL; // Initialize details to NULL
 }
 
+Status SetStatus(const code code, const string msg, const string details) {
+    Status status; // Create a new status object
+    status.code = code; // Set the status code
+    status.msg = msg; // Set the status message
+    status.details = details; // Set the status details
+    return status; // Return the created status object
+}
+
 error allocateStatus(Status** status) {
     if (status == NULL) {
         return "Status pointer is NULL"; // Invalid status pointer
