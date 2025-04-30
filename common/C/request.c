@@ -23,26 +23,19 @@ code requestConfirm() {
     return 0; // Default to no
 }
 
-code requestCommand(char* command, const string commandKeys) {
+code requestCommand(char* command, const string prompt) {
     if (command == NULL) {
         return 0; // Invalid command pointer
     }
-    if (commandKeys == NULL) {
-        return 0; // Invalid command keys
-    }
-
-    printf("Please enter your command : ");
+    printf("Options : \n%s\ncommand : ",prompt);
     error err = getLowerCaseChar(command); // Get user input
     if (err != NULL) {
         return 0;
     }
-    for (uint8 i = 0; i < stringLen(commandKeys); i++) {
-        if (*command == commandKeys[i]) {
-            return 1; // Valid command
-        }
+    if (*command == 'e'){ // default exit command
+        return 0; // Exit command
     }
-    Warning("Invalid command");
-    return -1; // Invalid command
+    return 1; // Success
 }
 
 code requestString(string* str, const uint32 maxLength, const string prompt) {

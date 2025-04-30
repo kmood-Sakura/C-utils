@@ -275,6 +275,122 @@ error removeChildDataPath(DataPath* parent, const Path filename) {
     return "Not Found"; // Not found
 }
 
+/**
+ * Print the entire DataPath tree structure in a clean, ASCII-only format.
+ * @param dataPath The root DataPath to print
+ */
+void PrintDataPath(DataPath* dataPath) {
+    if (dataPath == NULL) {
+        printf("(empty)\n");
+        return;
+    }
+    
+    if (dataPath->filename.path == NULL) {
+        printf("(unnamed)\n");
+        return;
+    }
+    
+    // Print the root node
+    printf("%s/\n", dataPath->filename.path);
+    
+    // Print all children with proper formatting
+    for (uint16 i = 0; i < dataPath->sizeDir; i++) {
+        DataPath* child = dataPath->Dir[i];
+        if (child != NULL) {
+            // Is this the last child?
+            uint8 isLast = (i == dataPath->sizeDir - 1);
+            
+            // Print this child and its subtree
+            if (isLast) {
+                printf("+-- %s/", child->filename.path);
+            } else {
+                printf("|-- %s/", child->filename.path);
+            }
+            
+            // Add comments for special folders
+            if (stringCmp(child->filename.path, "Notification")) {
+                printf("\t\t# Notifications folder");
+            } else if (stringCmp(child->filename.path, "Calendar")) {
+                printf("\t\t# Calendar events");
+            } else if (stringCmp(child->filename.path, "LEB2")) {
+                printf("\t\t# LEB2 module");
+            }
+            
+            printf("\n");
+            
+            // Print children with proper indentation
+            PrintDataPathChildren(child, isLast, 1);
+        }
+    }
+}
+
+/**
+ * Helper function to print the children of a DataPath node with proper indentation.
+ * @param dataPath The DataPath node whose children to print
+ * @param parentIsLast Whether the parent is the last node in its level
+ * @param level The current tree depth level (for indentation)
+ */
+void PrintDataPathChildren(DataPath* dataPath, uint8 parentIsLast, uint16 level) {
+    if (dataPath == NULL || dataPath->sizeDir == 0 || dataPath->Dir == NULL) {
+        return;
+    }
+    
+    char indentation[256] = {0}; // Buffer for indentation
+    uint16 indentPos = 0;
+    uint16 i, j;
+    
+    // Build the indentation string
+    for (i = 0; i < level; i++) {
+        if (i == level - 1) {
+            // Last level depends on whether this is the last child
+            if (parentIsLast) {
+                indentation[indentPos++] = ' ';
+                indentation[indentPos++] = ' ';
+                indentation[indentPos++] = ' ';
+            } else {
+                indentation[indentPos++] = '|';
+                indentation[indentPos++] = ' ';
+                indentation[indentPos++] = ' ';
+            }
+        } else {
+            // Previous levels get either space or pipe
+            indentation[indentPos++] = ' ';
+            indentation[indentPos++] = ' ';
+            indentation[indentPos++] = ' ';
+        }
+    }
+    indentation[indentPos] = '\0';
+    
+    // Print each child with proper prefix
+    for (j = 0; j < dataPath->sizeDir; j++) {
+        DataPath* child = dataPath->Dir[j];
+        if (child != NULL && child->filename.path != NULL) {
+            uint8 isLast = (j == dataPath->sizeDir - 1);
+            
+            // Print this child
+            if (isLast) {
+                printf("%s+-- %s/", indentation, child->filename.path);
+            } else {
+                printf("%s|-- %s/", indentation, child->filename.path);
+            }
+            
+            // Add comments for special folders
+            if (stringCmp(child->filename.path, "Notification") == 0) {
+                printf("\t\t# Notifications folder");
+            } else if (stringCmp(child->filename.path, "Calendar") == 0) {
+                printf("\t\t# Calendar events");
+            } else if (stringCmp(child->filename.path, "LEB2") == 0) {
+                printf("\t\t# LEB2 module");
+            }
+            
+            printf("\n");
+            
+            // Recursively print this child's children
+            PrintDataPathChildren(child, isLast, level + 1);
+        }
+    }
+}
+
 void FreeDataPath(DataPath* dataPath) {
     if (dataPath == NULL) return;
     

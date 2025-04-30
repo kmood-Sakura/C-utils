@@ -28,6 +28,9 @@ error addChildDataPath(DataPath* parent, DataPath* child);
 error findDataPathByFilename(const DataPath* parent, const Path filename, DataPath** result);
 error removeChildDataPath(DataPath* parent, const Path filename);
 
+void PrintDataPath(DataPath* dataPath);
+void PrintDataPathChildren(DataPath* dataPath, uint8 parentIsLast, uint16 level);
+
 void FreeDataPath(DataPath* dataPath);
 void FreeDataPathContent(DataPath* dataPath);
 typedef void (*DataPathAction)(DataPath* node, void* userData);
