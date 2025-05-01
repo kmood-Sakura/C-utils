@@ -49,15 +49,15 @@ typedef struct DateTimeInfo {
 } DateTimeInfo;
 
 /* Format strings */
-#define DATE_FORMAT "%04hu-%02hhu-%02hhu" // YYYY-MM-DD
-#define CLOCK_FORMAT "%02hhu:%02hhu:%02hhu" // HH:MM:SS
-#define TIME_FORMAT "%04hu-%02hhu-%02hhu %02hhu:%02hhu:%02hhu.%03hu" // YYYY-MM-DD HH:MM:SS.mmm
-#define DATETIME_FORMAT "%04hu-%02hhu-%02hhu %02hhu:%02hhu:%02hhu UTC+%hhu" // YYYY-MM-DD HH:MM:SS UTC+X
-#define TIMEVALUE_FORMAT "%04hu%02hhu%02hhu%02hhu%02hhu%02hhu%03hu" // YYYYMMDDHHMMSSmmm
+#define DATE_FORMAT "%04u-%02u-%02u" // YYYY-MM-DD
+#define CLOCK_FORMAT "%02u:%02u:%02u" // HH:MM:SS
+#define TIME_FORMAT "%04u-%02u-%02u %02u:%02u:%02u.%03u" // YYYY-MM-DD HH:MM:SS.mmm
+#define DATETIME_FORMAT "%04u-%02u-%02u %02u:%02u:%02u UTC+%u" // YYYY-MM-DD HH:MM:SS UTC+X
+#define TIMEVALUE_FORMAT "%04u%02u%02u%02u%02u%02u%03u" // YYYYMMDDHHMMSSmmm
 
 /* Log format strings */
-#define DATE_LOG_FORMAT "%04hu-%02hhu-%02hhu\n"
-#define CLOCK_LOG_FORMAT "%02hhu:%02hhu:%02hhu\n"
+#define DATE_LOG_FORMAT "%04u-%02u-%02u\n"
+#define CLOCK_LOG_FORMAT "%02u:%02u:%02u\n"
 #define TIME_LOG_FORMAT "%u-%u-%u %u:%u:%u.%u\n"
 #define DATETIME_LOG_FORMAT "%u-%u-%u %u:%u:%u UTC+%u\n"
 #define TIMEVALUE_LOG_FORMAT "%u%u%u%u%u%u%u\n" // YYYYMMDDHHMMSSmmm
