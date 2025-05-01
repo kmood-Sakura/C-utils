@@ -23,7 +23,7 @@ error createDirPath(Path* folderPath, const Path folderName, const Path dirPath)
 
 void initDataPath(DataPath* dataPath);
 error allocateDataPath(DataPath** dataPath);
-error createDataPath(DataPath* dataPath, const Path path, const Path filename);
+error createDataPath(DataPath* dataPath, const Path path, const Path filename, const code isFolder);
 error addChildDataPath(DataPath* parent, DataPath* child);
 error findDataPathByFilename(const DataPath* parent, const Path filename, DataPath** result);
 error removeChildDataPath(DataPath* parent, const Path filename);
@@ -49,6 +49,7 @@ typedef struct Path {
 typedef struct DataPath {
     Path path; // path to the data
     Path filename;
+    code isFolder; // 1: folder, 0: file
     DataPath* parent;
     DataPath** Dir;
     uint16 sizeDir;

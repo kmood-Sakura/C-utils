@@ -376,6 +376,65 @@ error readFileToTextLinesPath(textline** head, const Path filepath) {
     return NULL;  // Success
 }
 
+error writeTextLinesToFile(const textline* head, const string filepath) {
+    if (head == NULL) {
+        return "Invalid head pointer";
+    }
+    
+    if (filepath == NULL) {
+        return "Invalid file path";
+    }
+    
+    // Open the file for writing
+    FILE* file = fopen(filepath, "w");
+    if (file == NULL) {
+        return "Failed to open file for writing";
+    }
+    
+    // Write each line to the file
+    const textline* current = head;
+    while (current != NULL) {
+        fprintf(file, "%s\n", current->line);  // Write line content
+        current = current->nextline;  // Move to next line
+    }
+    
+    fclose(file);
+    
+    return NULL;  // Success
+}
+
+error addTextline(textline** head, const string line) {
+    if (head == NULL) return "Invalid head pointer";
+    
+    if (line == NULL) return "Invalid line content";
+    
+    // Create new textline node
+    textline* newLine = (textline*)malloc(sizeof(textline));
+    if (newLine == NULL) return "Memory allocation failed";
+    
+    // Allocate and copy line content
+    error err = allocateString(&newLine->line, line);
+    if (err != NULL) {
+        free(newLine);
+        return err; // Memory allocation failed
+    }
+    
+    newLine->nextline = NULL;
+    
+    // Add to linked list
+    if (*head == NULL) {
+        *head = newLine;  // First node
+    } else {
+        textline* current = *head;
+        while (current->nextline != NULL) {
+            current = current->nextline;  // Move to end of list
+        }
+        current->nextline = newLine;  // Add to end
+    }
+    
+    return NULL;  // Success
+}
+
 void FreeTextLine(textline* head) {
     if (head == NULL) return;
     

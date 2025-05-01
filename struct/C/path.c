@@ -157,6 +157,7 @@ void initDataPath(DataPath* dataPath) {
     dataPath->parent = NULL;
     dataPath->Dir = NULL;
     dataPath->sizeDir = 0;
+    dataPath->isFolder = 0; // Default to file
 }
 
 error allocateDataPath(DataPath** dataPath) {
@@ -173,7 +174,7 @@ error allocateDataPath(DataPath** dataPath) {
 /**
  * Create a new DataPath node with given path and filename.
  */
-error createDataPath(DataPath* dataPath, const Path path, const Path filename) {
+error createDataPath(DataPath* dataPath, const Path path, const Path filename, const code isFolder) {
     error err = NULL;
     
     if (dataPath == NULL) {
@@ -193,6 +194,8 @@ error createDataPath(DataPath* dataPath, const Path path, const Path filename) {
         FreePathContent(&(dataPath->path));
         return err;
     }
+
+    dataPath->isFolder = isFolder; // Set folder or file flag
     
     return NULL;
 }

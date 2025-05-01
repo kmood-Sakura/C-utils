@@ -36,6 +36,7 @@ code FolderExist(const string folderPath);
 
 error readFileToTextLinesString(textline** head, const string filepath);
 error readFileToTextLinesPath(textline** head, const Path filepath);
+error writeTextLinesToFile(const textline* head, const string filepath);
 
 void FreeTextLine(textline* head);
 void FreeFileContent(File* file);
