@@ -183,10 +183,8 @@ error createDataPath(DataPath* dataPath, const Path path, const Path filename, c
         return "data path pointer is NULL";
     }
     
-    // Initialize the dataPath
     initDataPath(dataPath);
     
-    // Copy path
     err = createPathLen(&(dataPath->path), path.path, path.length);
     if (err != NULL) return err;
     
