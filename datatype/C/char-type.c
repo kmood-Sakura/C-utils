@@ -29,6 +29,12 @@ error getLowerCaseChar(char *c) {
     if (*c >= 'A' && *c <= 'Z') {
         *c += 32;  // Convert to lowercase
     }
-    
+    // Consume the newline character that follows
+    int32 next = getchar();
+    if (next != '\n' && next != EOF) {
+        // If there are more characters on this line, put them back
+        // (though this is not standard C, it works in many implementations)
+        ungetc(next, stdin);
+    }
     return NULL;  // Success
 }

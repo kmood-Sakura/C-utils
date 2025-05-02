@@ -134,3 +134,34 @@ code LogFatal(const Status* status) {
     }
     return 0;
 }
+
+code LogChill(const Status* status) {
+    if (status == NULL) {
+        Error("Status is NULL");
+        return 0; // Invalid status
+    }
+    switch(status->code) {
+        case 0:
+            LogMsg("Status Failed");
+            Error(status->msg);
+            if (status->details != NULL) {
+                Details(status->details);
+            }
+            return 0;
+        case 1: return 1;
+        case -1: return -1;
+    }
+    if (status->code > 0) {
+        Success(status->msg);
+        if (status->details != NULL) {
+            Details(status->details);
+        }
+    }
+    if (status->code < 0) {
+        Warning(status->msg);
+        if (status->details != NULL) {
+            Details(status->details);
+        }
+    }
+    return status->code;
+}

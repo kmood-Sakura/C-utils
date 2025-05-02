@@ -15,5 +15,5 @@ void Details(const string detail);
 void LogStatus(const Status* status);
 void LogStatusMsg(const Status* status);
 code LogFatal(const Status* status);
-
+code LogChill(const Status* status);
 #endif// LOG_STATUS_H

@@ -6,7 +6,7 @@
 
 code requestConfirm() {
     printf("Comfirm Permission (default is no) 'y'= yes, 'n'= no\n");
-    printf("Please enter your choice : ");
+    printf("enter : ");
     char c;
     error err = getLowerCaseChar(&c); // Get user input
     if (err != NULL) {
@@ -39,34 +39,30 @@ code requestCommand(char* command, const string prompt) {
 }
 
 code requestString(string* str, const uint32 maxLength, const string prompt) {
-    if (str == NULL) {
-        return 0; // Invalid string pointer
-    }
-    if (maxLength == 0) {
-        return 0; // Invalid max length
-    }
-    if (prompt == NULL) {
-        return 0; // Invalid prompt
+    if (str == NULL || maxLength == 0 || prompt == NULL) {
+        return 0; // Invalid parameters
     }
 
     printf("%s : ", prompt);
+    fflush(stdout);
     
-    string input = (string)malloc((maxLength + 1) * sizeof(char)); // Allocate memory for input string
+    string input = (string)malloc((maxLength + 1) * sizeof(char));
     if (input == NULL) {
         return 0; // Memory allocation failed
     }
     
-    // Clear the input buffer
-    fgets(input, maxLength + 1, stdin);
+    // Do not use fflush(stdin) as it's not standard compliant
     
-    uint32 len = strlen(input);
-    if (len == 0) {
+    // Read input
+    if (fgets(input, maxLength + 1, stdin) == NULL) {
         free(input);
-        return -1; // Empty string
+        return 0; // Read error
     }
+
+    uint32 len = stringLen(input);
     
     // Remove newline character if present
-    if (input[len - 1] == '\n') {
+    if (len > 0 && input[len - 1] == '\n') {
         input[len - 1] = '\0';
         len--;
     }
@@ -78,6 +74,5 @@ code requestString(string* str, const uint32 maxLength, const string prompt) {
     }
     
     *str = input; // Assign input to str
-    
     return 1; // Success
 }
