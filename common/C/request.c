@@ -23,17 +23,14 @@ code requestConfirm() {
     return 0; // Default to no
 }
 
-code requestCommand(char* command, const string prompt) {
+code requestCommand(char* command) {
     if (command == NULL) {
         return 0; // Invalid command pointer
     }
-    printf("Options : \n%s\ncommand : ",prompt);
+    printf("command : ");
     error err = getLowerCaseChar(command); // Get user input
     if (err != NULL) {
         return 0;
-    }
-    if (*command == 'e'){ // default exit command
-        return 0; // Exit command
     }
     return 1; // Success
 }
