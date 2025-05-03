@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <dirent.h>
 #include <errno.h>
 #include <limits.h>
 
@@ -220,18 +221,18 @@ error addChildDataPath(DataPath* parent, DataPath* child) {
     return NULL;
 }
 
-/**
- * Find a child DataPath by filename in a parent's directory.
- */
 error findDataPathByFilename(const DataPath* parent, const Path filename, DataPath** result) {
     if (parent == NULL || result == NULL) return "Parent or result pointer is NULL";
-    
+    if (filename.path == NULL) return "Filename is NULL";
     uint16 i;
+    if (*result != NULL) {
+        FreeDataPath(*result); // Free the previous result if it exists
+    }
     *result = NULL;
     
     for (i = 0; i < parent->sizeDir; i++) {
         if (parent->Dir[i] != NULL) {
-            if (stringCmp(parent->Dir[i]->filename.path, filename.path) == 0) {
+            if (stringCmp(parent->Dir[i]->filename.path, filename.path)) {
                 *result = parent->Dir[i];
                 return NULL;
             }
@@ -239,6 +240,113 @@ error findDataPathByFilename(const DataPath* parent, const Path filename, DataPa
     }
     
     return "Not Found"; // Not found
+}
+
+error getDirDataPath(DataPath* parentPath) {
+    error err = NULL;
+    DIR* dir;
+    struct dirent* entry;
+    
+    if (parentPath == NULL) return "Parent path pointer is NULL";
+    
+    if (parentPath->isFolder != 1) return "Parent path is not a folder";
+    
+    dir = opendir(parentPath->path.path);
+    if (dir == NULL) return "Failed to open directory";
+    
+    while ((entry = readdir(dir)) != NULL) {
+        if (stringCmp(entry->d_name, ".") || stringCmp(entry->d_name, "..")) continue;
+
+        err = NULL;
+        Path filepath, filename;
+        initPath(&filepath);
+        initPath(&filename);
+        err = createPath(&filename, entry->d_name);
+        if (err != NULL) {
+            closedir(dir);
+            continue;
+        }
+        err = createPathFileorFolder(&filepath,filename, parentPath->path);
+        if (err != NULL) {
+            closedir(dir);
+            continue;
+        }
+        Path path;
+        initPath(&path);
+        
+        code isFolder = 0;
+        if (opendir(filepath.path) == NULL) {
+            isFolder = 0; // It's a folder
+        } else {
+            isFolder = 1; // It's a file
+        }
+
+        if (isFolder == 1) {
+            err = createDirPath(&path, filename, parentPath->path);
+            if (err != NULL) {
+                FreePathContent(&filepath);
+                FreePathContent(&filename);
+                closedir(dir);
+                continue;
+            }
+        } else {
+            path = filepath;
+        }
+
+        DataPath* newDataPath = NULL;
+        err = allocateDataPath(&newDataPath);
+        if (err != NULL) {
+            FreePathContent(&filepath);
+            FreePathContent(&filename);
+            closedir(dir);
+            continue;
+        }
+        
+        initDataPath(newDataPath);
+        
+        err = createDataPath(newDataPath, path, filename, isFolder);
+        if (err != NULL) {
+            FreeDataPath(newDataPath);
+            FreePathContent(&filepath);
+            FreePathContent(&filename);
+            FreePathContent(&path);
+            continue;
+        }
+        
+        err = addChildDataPath(parentPath, newDataPath);
+        if (err != NULL) {
+            FreeDataPathContent(newDataPath);
+            FreePathContent(&filepath);
+            FreePathContent(&filename);
+            FreePathContent(&path);
+            free(newDataPath);
+            continue;
+        }
+        
+        if (isFolder) {
+            err = getDirDataPath(newDataPath);
+            if (err != NULL) {
+                continue;
+            }
+        }
+    }
+    
+    // Clean up
+    closedir(dir);
+    
+    return err;
+}
+
+void FreeDirDataPath(DataPath* dataPath) {
+    if (dataPath == NULL) return;
+    
+    for (uint16 i = 0; i < dataPath->sizeDir; i++) {
+        if (dataPath->Dir[i] != NULL) {
+            FreeDirDataPath(dataPath->Dir[i]); // Recursively free child directories
+            FreeDataPath(dataPath->Dir[i]);
+        }
+    }
+    dataPath->Dir = NULL;
 }
 
 error removeChildDataPath(DataPath* parent, const Path filename) {    
@@ -378,12 +486,12 @@ void PrintDataPathChildren(DataPath* dataPath, uint8 parentIsLast, uint16 level)
             }
             
             // Add comments for special folders
-            if (stringCmp(child->filename.path, "Notification") == 0) {
-                printf("\t\t# Notifications folder");
-            } else if (stringCmp(child->filename.path, "Calendar") == 0) {
-                printf("\t\t# Calendar events");
-            } else if (stringCmp(child->filename.path, "LEB2") == 0) {
-                printf("\t\t# LEB2 module");
+            if (stringCmp(child->filename.path, "Notification")) {
+                printf("\t\t# in Notifications folder");
+            } else if (stringCmp(child->filename.path, "Calendar")) {
+                printf("\t\t# in Calendar events");
+            } else if (stringCmp(child->filename.path, "LEB2")) {
+                printf("\t\t# in LEB2 module");
             }
             
             printf("\n");

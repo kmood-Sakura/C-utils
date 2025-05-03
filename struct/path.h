@@ -26,8 +26,10 @@ error allocateDataPath(DataPath** dataPath);
 error createDataPath(DataPath* dataPath, const Path path, const Path filename, const code isFolder);
 error addChildDataPath(DataPath* parent, DataPath* child);
 error findDataPathByFilename(const DataPath* parent, const Path filename, DataPath** result);
+error getDirDataPath(DataPath* dataPath);
 error removeChildDataPath(DataPath* parent, const Path filename);
 
+void FreeDirDataPath(DataPath* dataPath);
 void PrintDataPath(DataPath* dataPath);
 void PrintDataPathChildren(DataPath* dataPath, uint8 parentIsLast, uint16 level);
 
