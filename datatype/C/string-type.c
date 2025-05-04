@@ -17,6 +17,33 @@ uint32 stringLen(const string str) {
     return length;
 }
 
+string stringCopyN(string dest, const string src, uint32 n) {
+    if (dest == NULL || src == NULL) {
+        return NULL;
+    }
+    
+    uint32 i;
+    for (i = 0; i < n && src[i] != '\0'; i++) {
+        dest[i] = src[i];
+    }
+    dest[i] = '\0';
+    
+    return dest;
+}
+
+code stringEndsWith(const string str, const string suffix) {
+    if (str == NULL || suffix == NULL)
+        return 0;
+    
+    size_t strLen = stringLen(str);
+    size_t suffixLen = stringLen(suffix);
+    
+    if (suffixLen > strLen)
+        return 0;
+    
+    return stringCmp(str + strLen - suffixLen, suffix);
+}
+
 code stringCmp(const string str1, const string str2) {
     if (str1 == NULL || str2 == NULL) {
         fprintf(stderr, "NULL string\n");

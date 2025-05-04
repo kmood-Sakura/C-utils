@@ -559,9 +559,22 @@ error stringToDateTime(DateTime* dt, const string str) {
     }
     
     struct tm tm_time = {0};
-    if (strftime(str, 20, "%Y-%m-%d %H:%M:%S", &tm_time) == 0) {
+    uint16 year;
+    uint8 month, day, hour, minute, second;
+    
+    // Parse the string using sscanf
+    if (sscanf(str, "%hu-%hhu-%hhu %hhu:%hhu:%hhu", 
+               &year, &month, &day, &hour, &minute, &second) != 6) {
         return "invalid format, expected YYYY-MM-DD HH:MM:SS";
     }
+    
+    // Adjust for struct tm expectations
+    tm_time.tm_year = year - 1900;  // Years since 1900
+    tm_time.tm_mon = month - 1;     // Month (0-11)
+    tm_time.tm_mday = day;          // Day of month (1-31)
+    tm_time.tm_hour = hour;         // Hours (0-23)
+    tm_time.tm_min = minute;        // Minutes (0-59)
+    tm_time.tm_sec = second;        // Seconds (0-59)
     
     *dt = mktime(&tm_time);
     if (*dt == (time_t)-1) {

@@ -17,7 +17,8 @@ typedef struct Strings{
 } Strings;
 
 uint32 stringLen(const string str);
-
+string stringCopyN(string dest, const string src, uint32 n);
+code stringEndsWith(const string str, const string suffix);
 code stringCmp(const string str1, const string str2);
 
 error allocateString(string* str, const string referStr);
