@@ -78,7 +78,7 @@ error createClass(Class* class,
                 LearningActivityList* learningActivityList, AttendanceList* attendanceList, ScoreBookList* scoreBookList,
                 LearnItList* learnItList, FileList* fileList, Survey* survey, MemberList* memberList);
 error createClassListNode(ClassList** node, Class class);
-error createSemester(Semester* semester, const string semesterId, ClassList* classList);
+error createSemester(Semester* semester, const uint8 year, const uint8 term, ClassList* classList);
 error createSemesterListNode(SemesterList** node, Semester semester);
 error createLEB2(LEB2* leb2, SemesterList* semesterList);
 
@@ -242,7 +242,8 @@ typedef struct ClassList {
 } ClassList;
 
 typedef struct Semester {
-    string semesterId; // semester ID
+    uint8 year; // year
+    uint8 term; // term
     ClassList* classList; // list of classes
 } Semester;
 

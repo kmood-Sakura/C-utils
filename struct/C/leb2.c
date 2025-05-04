@@ -222,7 +222,8 @@ error allocateSemester(Semester** semester) {
         return "Memory allocation failed";
     }
     
-    (*semester)->semesterId = NULL;
+    (*semester)->year = 0;
+    (*semester)->term = 0;
     (*semester)->classList = NULL;
     
     return NULL;
@@ -618,16 +619,13 @@ error createClassListNode(ClassList** node, Class class) {
 }
 
 // Create Semester
-error createSemester(Semester* semester, const string semesterId, ClassList* classList) {
+error createSemester(Semester* semester, const uint8 year, const uint8 term, ClassList* classList) {
     if (semester == NULL) {
         return "Semester pointer is required";
     }
     
-    error err = allocateString(&(semester->semesterId), semesterId);
-    if (err != NULL) {
-        return err;
-    }
-    
+    semester->year = year;
+    semester->term = term;
     semester->classList = classList;
     
     return NULL;
@@ -1273,7 +1271,6 @@ void FreeClassList(ClassList* head) {
 void FreeSemesterContents(Semester* semester) {
     if (semester == NULL) return;
     
-    FreeString(&semester->semesterId);
     FreeClassList(semester->classList);
 }
 
