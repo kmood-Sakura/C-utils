@@ -20,6 +20,7 @@ error createFilePath(Path* filepath, const Path filename, const Path dirPath, co
 error createFolderPath(Path* folderPath, const string folderName, const Path dirPath);
 error createFolderPathLen(Path* folderPath, const string folderName, const Path dirPath, const uint32 length);
 error createDirPath(Path* folderPath, const Path folderName, const Path dirPath);
+error createPathFileorFolder(Path* filepath, const Path filename, const Path dirPath);
 
 void initDataPath(DataPath* dataPath);
 error allocateDataPath(DataPath** dataPath);

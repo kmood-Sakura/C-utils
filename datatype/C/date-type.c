@@ -249,6 +249,25 @@ error timeValueToString(string* str, TimeValue value) {
     return NULL; // Success
 }
 
+DateTime makeDateTime(Date date, int hour, int minute) {
+    struct tm tm_time = {0};
+    tm_time.tm_year = date.year - 1900; // tm_year is years since 1900
+    tm_time.tm_mon = date.month - 1;    // tm_mon is 0-11
+    tm_time.tm_mday = date.day;
+    tm_time.tm_hour = hour;
+    tm_time.tm_min = minute;
+    tm_time.tm_sec = 0; // default seconds to 0
+
+    return mktime(&tm_time); // convert to time_t (DateTime)
+}
+
+code isSameDate(const Date* d1, const Date* d2) {
+    if (d1 == NULL || d2 == NULL) return 0;
+    return (d1->year == d2->year) &&
+           (d1->month == d2->month) &&
+           (d1->day == d2->day);
+}
+
 error dateTimeToString(string* str, DateTime dt) {
     if (str == NULL) {
         return "string pointer is NULL";

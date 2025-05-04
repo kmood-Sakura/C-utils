@@ -65,6 +65,8 @@ typedef struct DateTimeInfo {
 #define TIMEVALUE_LOG_FORMAT "%u%u%u%u%u%u%u\n" // YYYYMMDDHHMMSSmmm
 #define KID_TIME_LOG_FORMAT "Year: %u, Month: %u, Day: %u, Hour: %u, Minute: %u, Second: %u\n"
 
+DateTime makeDateTime(Date date, int hour, int minute);
+code isSameDate(const Date* d1, const Date* d2);
 /**
  * Get the current date and time
  * 
