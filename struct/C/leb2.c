@@ -668,7 +668,7 @@ error addAssignmentToList(AssignmentList** head, Assignment assignment) {
         return "AssignmentList head pointer is required";
     }
     
-    AssignmentList* new_node;
+    AssignmentList* new_node = NULL;
     error err = createAssignmentListNode(&new_node, assignment);
     if (err != NULL) {
         return err;
@@ -696,7 +696,7 @@ error addLearningActivityToList(LearningActivityList** head, LearningActivity ac
         return "LearningActivityList head pointer is required";
     }
     
-    LearningActivityList* new_node;
+    LearningActivityList* new_node = NULL;
     error err = createLearningActivityListNode(&new_node, activity);
     if (err != NULL) {
         return err;
@@ -724,7 +724,7 @@ error addAttendanceToList(AttendanceList** head, Attendance attendance) {
         return "AttendanceList head pointer is required";
     }
     
-    AttendanceList* new_node;
+    AttendanceList* new_node = NULL;
     error err = createAttendanceListNode(&new_node, attendance);
     if (err != NULL) {
         return err;
@@ -752,7 +752,7 @@ error addScoreBookToList(ScoreBookList** head, ScoreBook scoreBook) {
         return "ScoreBookList head pointer is required";
     }
     
-    ScoreBookList* new_node;
+    ScoreBookList* new_node = NULL;
     error err = createScoreBookListNode(&new_node, scoreBook);
     if (err != NULL) {
         return err;
@@ -780,7 +780,7 @@ error addLearnItToList(LearnItList** head, LearnIt learnIt) {
         return "LearnItList head pointer is required";
     }
     
-    LearnItList* new_node;
+    LearnItList* new_node = NULL;
     error err = createLearnItListNode(&new_node, learnIt);
     if (err != NULL) {
         return err;
@@ -808,7 +808,7 @@ error addMemberToList(MemberList** head, Member member) {
         return "MemberList head pointer is required";
     }
     
-    MemberList* new_node;
+    MemberList* new_node = NULL;
     error err = createMemberListNode(&new_node, member);
     if (err != NULL) {
         return err;
@@ -836,7 +836,7 @@ error addFileToList(FileList** head, File file) {
         return "FileList head pointer is required";
     }
     
-    FileList* new_node;
+    FileList* new_node = NULL;
     error err = createFileListNode(&new_node, file);
     if (err != NULL) {
         return err;
@@ -864,7 +864,7 @@ error addClassToList(ClassList** head, Class class) {
         return "ClassList head pointer is required";
     }
     
-    ClassList* new_node;
+    ClassList* new_node = NULL;
     error err = createClassListNode(&new_node, class);
     if (err != NULL) {
         return err;
@@ -892,7 +892,7 @@ error addSemesterToList(SemesterList** head, Semester semester) {
         return "SemesterList head pointer is required";
     }
     
-    SemesterList* new_node;
+    SemesterList* new_node = NULL;
     error err = createSemesterListNode(&new_node, semester);
     if (err != NULL) {
         return err;

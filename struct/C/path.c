@@ -221,9 +221,9 @@ error addChildDataPath(DataPath* parent, DataPath* child) {
     return NULL;
 }
 
-error findDataPathByFilename(const DataPath* parent, const Path filename, DataPath** result) {
+error findDataPathByFilename(const DataPath* parent, const string filename, DataPath** result) {
     if (parent == NULL || result == NULL) return "Parent or result pointer is NULL";
-    if (filename.path == NULL) return "Filename is NULL";
+    if (filename == NULL) return "Filename is NULL";
     uint16 i;
     if (*result != NULL) {
         FreeDataPath(*result); // Free the previous result if it exists
@@ -232,7 +232,7 @@ error findDataPathByFilename(const DataPath* parent, const Path filename, DataPa
     
     for (i = 0; i < parent->sizeDir; i++) {
         if (parent->Dir[i] != NULL) {
-            if (stringCmp(parent->Dir[i]->filename.path, filename.path)) {
+            if (stringCmp(parent->Dir[i]->filename.path, filename)) {
                 *result = parent->Dir[i];
                 return NULL;
             }
