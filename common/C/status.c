@@ -4,75 +4,75 @@
 #include <stdlib.h>
 
 void initStatus(Status* status) {
-    status->code = 0; // Initialize code to 0
-    status->msg = NULL; // Initialize message to NULL
-    status->details = NULL; // Initialize details to NULL
+    status->code = 0;
+    status->msg = NULL;
+    status->details = NULL;
 }
 
 Status SetStatus(const code code, const string msg, const string details) {
-    Status status; // Create a new status object
-    status.code = code; // Set the status code
-    status.msg = msg; // Set the status message
-    status.details = details; // Set the status details
-    return status; // Return the created status object
+    Status status;
+    status.code = code;
+    status.msg = msg;
+    status.details = details;
+    return status;
 }
 
 error allocateStatus(Status** status) {
     if (status == NULL) {
-        return "Status pointer is NULL"; // Invalid status pointer
+        return "Status pointer is NULL";
     }
     if (*status != NULL) {
-        return "Status already allocated"; // Status already exists
+        return "Status already allocated";
     }
-    *status = (Status*)malloc(sizeof(Status)); // Allocate memory for status
+    *status = (Status*)malloc(sizeof(Status));
     if (*status == NULL) {
-        return "Memory allocation failed"; // Memory allocation failed
+        return "Memory allocation failed";
     }
-    (*status)->code = 0; // Initialize code to 0
-    (*status)->msg = NULL; // Initialize message to NULL
-    (*status)->details = NULL; // Initialize details to NULL
+    (*status)->code = 0;
+    (*status)->msg = NULL;
+    (*status)->details = NULL;
 
-    return NULL; // Success
+    return NULL;
 }
 
 error createStatus(Status* status, const uint8 code, const string msg, const string details) {
     if (status == NULL) {
-        return "Status pointer is NULL"; // Invalid status pointer
+        return "Status pointer is NULL";
     }
     if (status->msg != NULL) {
-        FreeString(&status->msg); // Free existing message
-        status->msg = NULL; // Reset message
+        FreeString(&status->msg);
+        status->msg = NULL;
     }
     if (status->details != NULL) {
-        FreeString(&status->details); // Free existing details
-        status->details = NULL; // Reset details
+        FreeString(&status->details);
+        status->details = NULL;
     }
-    status->code = code; // Set code
-    error err = allocateString(&status->msg, msg); // Allocate memory for message
+    status->code = code;
+    error err = allocateString(&status->msg, msg);
     if (err != NULL) {
-        return err; // Memory allocation failed
+        return err;
     }
-    err = allocateString(&status->details, details); // Allocate memory for details
+    err = allocateString(&status->details, details);
     if (err != NULL) {
-        return err; // Memory allocation failed
+        return err;
     }
 
-    return NULL; // Success
+    return NULL;
 }
 
 void FreeStatusContent(Status* status) {
-    if (status == NULL) return; // Invalid status pointer
+    if (status == NULL) return;
     if (status->msg != NULL) {
-        FreeString(&status->msg); // Free message string
+        FreeString(&status->msg);
     }
     if (status->details != NULL) {
-        FreeString(&status->details); // Free details string
+        FreeString(&status->details);
     }
 }
 
 void FreeStatus(Status* status) {
-    if (status == NULL) return; // Invalid status pointer
-    FreeStatusContent(status); // Free status content
-    free(status); // Free status structure
-    status = NULL; // Reset status pointer
+    if (status == NULL) return;
+    FreeStatusContent(status);
+    free(status);
+    status = NULL;
 }

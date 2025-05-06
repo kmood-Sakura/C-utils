@@ -315,52 +315,43 @@ error readFileToTextLinesPath(textline** head, const Path filepath) {
         return "Invalid file path";
     }
     
-    // Initialize head to NULL
     *head = NULL;
     
-    // Open the file
     FILE* file = fopen(filepath.path, "r");
     if (file == NULL) {
         return "Failed to open file";
     }
     
     textline* lastLine = NULL;
-    char buffer[1024];  // Buffer for reading lines
-    
-    // Read file line by line
+    char buffer[1024];
+
     while (fgets(buffer, sizeof(buffer), file) != NULL) {
-        // Create new textline node
         textline* newLine = (textline*)malloc(sizeof(textline));
         if (newLine == NULL) {
             fclose(file);
-            FreeTextLine(*head); // Clean up already allocated lines
+            FreeTextLine(*head);
             
             return "Memory allocation failed";
         }
-        
-        // Remove newline character if present
         uint32 len = stringLen(buffer);
         if (len > 0 && buffer[len-1] == '\n') {
             buffer[len-1] = '\0';
         }
-        
-        // Allocate and copy line content
         error err = allocateString(&newLine->line, buffer);
         if (err != NULL) {
             free(newLine);
             fclose(file);
-            FreeTextLine(*head); // Clean up already allocated lines
+            FreeTextLine(*head);
             
             return err;
         }
         
         newLine->nextline = NULL;
         
-        // Add to linked list
         if (*head == NULL) {
-            *head = newLine;  // First node
+            *head = newLine;
         } else {
-            lastLine->nextline = newLine;  // Add to end
+            lastLine->nextline = newLine;
         }
         
         lastLine = newLine;

@@ -5,22 +5,14 @@
 #include <string.h>
 #include <time.h>
 
-/*
- * DateTime Retrieval Functions
- */
-
 error getCurrentDateTime(DateTime* dateTime) {
     if (dateTime == NULL) {
         return "dateTime pointer is NULL";
     }
     
     *dateTime = time(NULL);
-    return NULL; // Success
+    return NULL;
 }
-
-/*
- * Log Functions
- */
 
 void logDate(const Date* date) {
     if (date == NULL) {
@@ -87,10 +79,6 @@ void logDateTime(DateTime dateTime) {
     printf("DateTime: %s (%lld)\n", buffer, (long long)dateTime);
 }
 
-/*
- * Memory Management Functions
- */
-
 void freeDate(Date* date) {
     if (date != NULL) {
         free(date);
@@ -115,10 +103,6 @@ void freeDateTimeInfo(DateTimeInfo* info) {
     }
 }
 
-/*
- * String Conversion Functions
- */
-
 error dateToString(string* str, const Date* date) {
     if (str == NULL) {
         return "string pointer is NULL";
@@ -132,13 +116,13 @@ error dateToString(string* str, const Date* date) {
         return "date is NULL";
     }
     
-    *str = (string)malloc(12 * sizeof(char));  // YYYY-MM-DD\0 (12 characters)
+    *str = (string)malloc(12 * sizeof(char));
     if (*str == NULL) {
         return "memory allocation failed";
     }
     
     sprintf(*str, DATE_FORMAT, date->year, date->month, date->day);
-    return NULL; // Success
+    return NULL;
 }
 
 error clockToString(string* str, const Clock* clock) {
@@ -154,13 +138,13 @@ error clockToString(string* str, const Clock* clock) {
         return "clock is NULL";
     }
     
-    *str = (string)malloc(10 * sizeof(char));  // HH:MM:SS\0 (10 characters)
+    *str = (string)malloc(10 * sizeof(char));
     if (*str == NULL) {
         return "memory allocation failed";
     }
     
     sprintf(*str, CLOCK_FORMAT, clock->hour, clock->minute, clock->second);
-    return NULL; // Success
+    return NULL;
 }
 
 error timeToString(string* str, const Time* time) {
@@ -176,7 +160,7 @@ error timeToString(string* str, const Time* time) {
         return "time is NULL";
     }
     
-    *str = (string)malloc(30 * sizeof(char));  // YYYY-MM-DD HH:MM:SS.mmm\0 (30 characters)
+    *str = (string)malloc(30 * sizeof(char));
     if (*str == NULL) {
         return "memory allocation failed";
     }
@@ -186,7 +170,7 @@ error timeToString(string* str, const Time* time) {
             time->hour, time->minute, time->second,
             time->millisecond);
     
-    return NULL; // Success
+    return NULL;
 }
 
 error dateTimeInfoToString(string* str, const DateTimeInfo* info) {
@@ -202,7 +186,7 @@ error dateTimeInfoToString(string* str, const DateTimeInfo* info) {
         return "info is NULL";
     }
     
-    *str = (string)malloc(35 * sizeof(char));  // YYYY-MM-DD HH:MM:SS UTC+X\0 (35 characters)
+    *str = (string)malloc(35 * sizeof(char));
     if (*str == NULL) {
         return "memory allocation failed";
     }
@@ -212,7 +196,7 @@ error dateTimeInfoToString(string* str, const DateTimeInfo* info) {
             info->hour, info->minute, info->second,
             info->utc);
     
-    return NULL; // Success
+    return NULL;
 }
 
 error timeValueToString(string* str, TimeValue value) {
@@ -224,7 +208,7 @@ error timeValueToString(string* str, TimeValue value) {
         return "string already allocated";
     }
     
-    *str = (string)malloc(20 * sizeof(char));  // YYYYMMDDHHMMSSmmm\0 (20 characters)
+    *str = (string)malloc(20 * sizeof(char));
     if (*str == NULL) {
         return "memory allocation failed";
     }
@@ -246,19 +230,19 @@ error timeValueToString(string* str, TimeValue value) {
     sprintf(*str, TIMEVALUE_FORMAT, 
             year, month, day, hour, min, sec, ms);
     
-    return NULL; // Success
+    return NULL;
 }
 
 DateTime makeDateTime(Date date, int hour, int minute) {
     struct tm tm_time = {0};
-    tm_time.tm_year = date.year - 1900; // tm_year is years since 1900
-    tm_time.tm_mon = date.month - 1;    // tm_mon is 0-11
+    tm_time.tm_year = date.year - 1900;
+    tm_time.tm_mon = date.month - 1;
     tm_time.tm_mday = date.day;
     tm_time.tm_hour = hour;
     tm_time.tm_min = minute;
-    tm_time.tm_sec = 0; // default seconds to 0
+    tm_time.tm_sec = 0;
 
-    return mktime(&tm_time); // convert to time_t (DateTime)
+    return mktime(&tm_time);
 }
 
 code isSameDate(const Date* d1, const Date* d2) {
@@ -277,7 +261,7 @@ error dateTimeToString(string* str, DateTime dt) {
         return "string already allocated";
     }
     
-    *str = (string)malloc(20 * sizeof(char));  // YYYY-MM-DD HH:MM:SS\0 (20 characters)
+    *str = (string)malloc(20 * sizeof(char));
     if (*str == NULL) {
         return "memory allocation failed";
     }
@@ -285,12 +269,8 @@ error dateTimeToString(string* str, DateTime dt) {
     struct tm* timeInfo = localtime(&dt);
     strftime(*str, 20, "%Y-%m-%d %H:%M:%S", timeInfo);
     
-    return NULL; // Success
+    return NULL;
 }
-
-/*
- * String To Date/Time Functions
- */
 
 error stringToDate(Date** date, const string str) {
     if (date == NULL) {
@@ -340,7 +320,7 @@ error stringToDate(Date** date, const string str) {
     (*date)->month = month;
     (*date)->year = year;
     
-    return NULL; // Success
+    return NULL;
 }
 
 error stringToClock(Clock** clock, const string str) {
@@ -375,7 +355,7 @@ error stringToClock(Clock** clock, const string str) {
     (*clock)->minute = minute;
     (*clock)->second = second;
     
-    return NULL; // Success
+    return NULL;
 }
 
 error stringToTime(Time** time, const string str) {
@@ -435,7 +415,7 @@ error stringToTime(Time** time, const string str) {
     (*time)->second = second;
     (*time)->millisecond = millisecond;
     
-    return NULL; // Success
+    return NULL;
 }
 
 error stringToDateTimeInfo(DateTimeInfo** info, const string str) {
@@ -495,7 +475,7 @@ error stringToDateTimeInfo(DateTimeInfo** info, const string str) {
     (*info)->second = second;
     (*info)->utc = utc;
     
-    return NULL; // Success
+    return NULL;
 }
 
 error stringToTimeValue(TimeValue* value, const string str) {
@@ -546,7 +526,7 @@ error stringToTimeValue(TimeValue* value, const string str) {
              (TimeValue)second +
              (TimeValue)millisecond / 1000.0;
     
-    return NULL; // Success
+    return NULL;
 }
 
 error stringToDateTime(DateTime* dt, const string str) {
@@ -562,13 +542,11 @@ error stringToDateTime(DateTime* dt, const string str) {
     uint16 year;
     uint8 month, day, hour, minute, second;
     
-    // Parse the string using sscanf
     if (sscanf(str, "%hu-%hhu-%hhu %hhu:%hhu:%hhu", 
                &year, &month, &day, &hour, &minute, &second) != 6) {
         return "invalid format, expected YYYY-MM-DD HH:MM:SS";
     }
     
-    // Adjust for struct tm expectations
     tm_time.tm_year = year - 1900;  // Years since 1900
     tm_time.tm_mon = month - 1;     // Month (0-11)
     tm_time.tm_mday = day;          // Day of month (1-31)
