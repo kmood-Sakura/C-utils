@@ -59,7 +59,6 @@ void LogMsg(const string msg) {
 
 void Details(const string detail) {
     if (detail == NULL) {
-        // fprintf(stderr, "Detail is NULL\n");
         return;
     }
     printf("Details: %s\n", detail);
@@ -108,7 +107,7 @@ void LogStatusMsg(const Status* status) {
 code LogFatal(const Status* status) {
     if (status == NULL) {
         Error("Status is NULL");
-        return 0; // Invalid status
+        return 0;
     }
     switch(status->code) {
         case 0:
@@ -119,7 +118,6 @@ code LogFatal(const Status* status) {
             }
             return 0;
         case 1:
-            // return Success(status->msg);
             return 1;
         case -1:
             LogMsg("Status Warning");
@@ -138,7 +136,7 @@ code LogFatal(const Status* status) {
 code LogChill(const Status* status) {
     if (status == NULL) {
         Error("Status is NULL");
-        return 0; // Invalid status
+        return 0;
     }
     switch(status->code) {
         case 0:

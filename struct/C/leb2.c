@@ -288,10 +288,9 @@ error createAssignment(Assignment* assignment, const string head, const string d
     return NULL;
 }
 
-// Create AssignmentList node
 error createAssignmentListNode(AssignmentList** node, Assignment assignment) {
-    if (*node != NULL) {
-        return "AssignmentList node pointer must be NULL";
+    if (node == NULL) {
+        return "AssignmentList node pointer is required";
     }
     
     *node = (AssignmentList*)malloc(sizeof(AssignmentList));
